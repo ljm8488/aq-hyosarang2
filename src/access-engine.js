@@ -22,7 +22,31 @@ var RANK = { '': 0, view: 1, manage: 2, admin: 3 };
 var LABEL = { '': '없음', view: '뷰', manage: '관리', admin: 'admin' };
 var LONG = { '': '권한 없음', view: '뷰권한', manage: '관리권한', admin: '기관 admin' };
 var ROLES = ['시스템관리자', '사용자'];
-var UHEAD = ['email', 'name', 'role', 'access', 'active', 'memo', 'lastSeen', 'empNo'];
+var UHEAD = ['email', 'name', 'role', 'access', 'active', 'memo', 'lastSeen', 'empNo', 'gmail', 'hosp', 'dept', 'title', 'notify', 'vView', 'vUse', 'aView', 'aUse', 'orgAdmin', 'from', 'to'];
+var PROFILE = ['gmail', 'hosp', 'dept', 'title', 'notify', 'vView', 'vUse', 'aView', 'aUse', 'orgAdmin', 'from', 'to'];
+function kstToday() { return new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10); }
+function isValidNow(u, today) { today = today || kstToday(); return !(u.from && today < String(u.from)) && !(u.to && today > String(u.to)); }
+/* 소속기관 + 현황뷰어(뷰/사용) + 기관관리자 → 기관별 등급 문자열 */
+function deriveAccess(u, codes) {
+  if (u.role === '시스템관리자') return '';
+  var Y = function (v) { return String(v || '').toUpperCase() === 'Y'; };
+  var lv = Y(u.orgAdmin) ? 'admin' : Y(u.vUse) ? 'manage' : Y(u.vView) ? 'view' : '';
+  if (!lv || !u.hosp) return '';
+  var scope = u.hosp === '전체' ? codes : codes.filter(function (c) { return c === u.hosp; }), o = {};
+  scope.forEach(function (c) { o[c] = lv; });
+  return formatAccess(o, codes);
+}
+/* 로그인 ID → 계정 이메일(내부 식별자). kind: emp(사번) | gmail | sys(시스템관리자 ID) */
+function loginEmail(d, kind, id) {
+  id = String(id || '').trim().toLowerCase(); if (!id) return '';
+  var u = (d.users || []).filter(function (x) {
+    if (!isActive(x)) return false;
+    if (kind === 'sys') return x.role === '시스템관리자' && low(x.empNo) === id;
+    if (kind === 'gmail') return low(x.gmail) === id || low(x.email) === id;
+    return x.role !== '시스템관리자' && low(x.empNo) === id;
+  })[0];
+  return u ? u.email : '';
+}
 var HHEAD = ['code', 'name', 'patSheet', 'dbSheet', 'patDateCol', 'patValCol', 'nurseCol', 'doctorCol', 'wardCol', 'targetDoc', 'targetRn', 'targetNurse', 'pharmRate', 'active', 'patUrl', 'dbUrl'];
 var MANAGE_COLS = [9, 10, 11, 12];   // 관리권한이 편집할 수 있는 기관 열 (목표 3종 + 약사재직률)
 var SOURCE_COLS = [2, 3, 4, 5, 6, 7, 8, 14, 15];   // 구글시트 연결(탭·열·URL) — 개발자(시스템관리자)만
@@ -47,6 +71,7 @@ function findUser(d, email) {
   email = low(email);
   var u = (d.users || []).filter(function (x) { return low(x.email) === email && isActive(x) && ROLES.indexOf(x.role) >= 0; })[0];
   if (!u) return null;
+  if (!isValidNow(u)) return null;   // 유효기간 밖 = 접근 차단
   if (u.role !== '시스템관리자' && !Object.keys(parseAccess(u.access)).length) return null;   // 어느 기관에도 권한 없음
   return { email: u.email, name: u.name, role: u.role, access: u.access || '' };
 }
@@ -164,17 +189,18 @@ function applyUsers(all, rows, perm, codes) {
       var oa = old ? parseAccess(old.access) : {}, na = parseAccess(u.access), merged = {};
       codes.forEach(function (c) { merged[c] = perm.adminHosps.indexOf(c) >= 0 ? (na[c] || '') : (oa[c] || ''); });   // 관리 밖 기관은 기존값 유지
       u.access = formatAccess(merged, codes);
-      if (!perm.globalAdmin) u.active = old ? old.active : 'Y';
+      if (!perm.globalAdmin && old && !visibleUsers([old], perm).length) u.active = old.active;
       if (old && !visibleUsers([old], perm).length) { u.name = old.name; u.memo = old.memo; }
     }
     if (u.role === '시스템관리자') u.access = '';
     u.email = String(u.email).trim();
     u.lastSeen = old ? old.lastSeen : '';
+    if (old) for (var ok in old) if (!(ok in u)) u[ok] = old[ok];   // pwReset 등 목록 밖 필드 유지
     if (idx[e] !== undefined) out[idx[e]] = u; else { idx[e] = out.length; out.push(u); }
   }
   var vis = visibleUsers(all, perm), removed = vis.filter(function (u) { return !seen[low(u.email)]; });
   if (removed.length) {
-    if (!perm.sys) return { ok: false, msg: '사용자 삭제는 시스템관리자만 가능합니다. 권한을 \'없음\'으로 바꿔 주세요.' };
+    if (!perm.sys && removed.some(function (u) { var ac = parseAccess(u.access); return u.role === '시스템관리자' || Object.keys(ac).some(function (c) { return perm.adminHosps.indexOf(c) < 0; }); })) return { ok: false, msg: '다른 기관에도 권한이 있는 사용자는 시스템관리자만 삭제할 수 있습니다.' };
     var rm = {}; removed.forEach(function (u) { rm[low(u.email)] = 1; });
     out = out.filter(function (u) { return !rm[low(u.email)]; });
   }
@@ -186,7 +212,12 @@ function applyHosp(all, rows, perm) {
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i], code = r[0], lv = perm.levels[code] || '';
     var j = -1; out.forEach(function (h, x) { if (h.code === code) j = x; });
-    if (j < 0) return { ok: false, msg: '기관 추가는 시스템관리자만 가능합니다: ' + code };
+    if (j < 0) {
+      if (!perm.sys) return { ok: false, msg: '기관 추가는 시스템관리자만 가능합니다: ' + code };
+      if (!String(code || '').trim() || !String(r[1] || '').trim()) return { ok: false, msg: '새 기관의 기관코드와 기관명을 입력해 주세요.' };
+      var nh = {}; HHEAD.forEach(function (k, ci) { nh[k] = r[ci] == null ? '' : r[ci]; }); nh.code = String(code).trim(); if (!nh.active) nh.active = 'Y';
+      out.push(nh); continue;
+    }
     if (RANK[lv] < RANK.manage) return { ok: false, msg: code + ' 편집 권한이 없습니다.' };
     var oldRow = HHEAD.map(function (k) { return out[j][k]; });
     for (var c = 1; c < HHEAD.length; c++) {
@@ -250,7 +281,7 @@ function migrateLegacyUser(u, codes) {
 
 return {
   version: '1.0', LEVELS: LEVELS, RANK: RANK, LABEL: LABEL, LONG: LONG, ROLES: ROLES, UHEAD: UHEAD, HHEAD: HHEAD, MANAGE_COLS: MANAGE_COLS,
-  parseAccess: parseAccess, emailForEmp: emailForEmp, maskEmail: maskEmail, formatAccess: formatAccess, findUser: findUser, permissions: permissions,
+  parseAccess: parseAccess, emailForEmp: emailForEmp, deriveAccess: deriveAccess, loginEmail: loginEmail, isValidNow: isValidNow, PROFILE: PROFILE, maskEmail: maskEmail, formatAccess: formatAccess, findUser: findUser, permissions: permissions,
   roleLabel: roleLabel, accessSummary: accessSummary, buildDashboard: buildDashboard,
   visibleUsers: visibleUsers, adminGet: adminGet, adminLogs: adminLogs,
   applyUsers: applyUsers, applyHosp: applyHosp, canSave: canSave, migrateLegacyUser: migrateLegacyUser,

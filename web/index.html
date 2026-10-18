@@ -56,32 +56,56 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
     </div>
     <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:18px;display:flex;flex-direction:column;gap:14px">
       <h3 style="margin:0;font-size:22px">로그인</h3>
-      <sc-if value="{{ L.isEmail }}" hint-placeholder-val="{{ true }}">
-        <div role="tablist" aria-label="로그인 방식" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;background:var(--color-neutral-100);border:1px solid var(--aq-line);border-radius:var(--radius-md)">
-          <sc-for list="{{ L.modes }}" as="m" hint-placeholder-count="2">
-            <button role="tab" aria-selected="{{ m.on }}" onClick="{{ m.pick }}" style="min-height:44px;border:1px solid {{ m.bd }};border-radius:var(--radius-sm);background:{{ m.bg }};color:var(--color-text);font:inherit;font-weight:600;font-size:15px;cursor:pointer;box-shadow:{{ m.sh }}">{{ m.label }}</button>
-          </sc-for>
-        </div>
-      </sc-if>
-      <sc-if value="{{ L.isEmpForm }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ L.isReset }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:15px;font-weight:600">처음 로그인 · 비밀번호 찾기</div>
         <div class="field">
-          <label>사번</label>
-          <input class="input" autocomplete="username" placeholder="예: H1101" value="{{ L.emp }}" onChange="{{ L.onEmp }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px;text-transform:uppercase">
+          <label>{{ L.resetLabel }}</label>
+          <input class="input" placeholder="{{ L.idPh }}" value="{{ L.idVal }}" onChange="{{ L.onId }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px">
         </div>
-        <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">사번에 등록된 이메일로 인증코드를 보냅니다.</div>
+        <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">등록된 이메일로 인증코드를 보냅니다. 인증 후 새 비밀번호(숫자 4자리)를 정합니다.</div>
         <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.request }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ L.sendLabel }}</button>
+        <button class="btn btn-ghost" onClick="{{ L.back }}" style="min-height:44px;align-self:flex-start">로그인으로 돌아가기</button>
       </sc-if>
-      <sc-if value="{{ L.isGmailForm }}" hint-placeholder-val="{{ false }}">
-        <button class="btn btn-secondary" disabled="{{ L.busy }}" onClick="{{ L.google }}" style="min-height:48px;font-size:15px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">
-          <svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
-          Google(Gmail) 계정으로 로그인
-        </button>
-        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)"><span style="flex:1;height:1px;background:var(--color-divider)"></span>또는 Gmail로 인증코드 받기<span style="flex:1;height:1px;background:var(--color-divider)"></span></div>
+      <sc-if value="{{ L.isMain }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ L.isSysMode }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--color-accent-300);background:var(--color-accent-100);border-radius:var(--radius-md);font-size:14px;line-height:1.5;color:var(--color-accent-800)">
+            <svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            <span style="text-wrap:pretty">시스템 관리자는 기관에 소속되지 않으며 전 기관·전 기능에 접근합니다. 로그인 후 상단에서 조회할 기관을 바꿀 수 있습니다.</span>
+          </div>
+        </sc-if>
         <div class="field">
-          <label>이메일</label>
-          <input class="input" type="email" autocomplete="email" placeholder="name@gmail.com" value="{{ L.email }}" onChange="{{ L.onEmail }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px">
+          <label>로그인 방식</label>
+          <div role="tablist" aria-label="로그인 방식" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+            <sc-for list="{{ L.modes }}" as="m" hint-placeholder-count="3">
+              <button role="tab" aria-selected="{{ m.on }}" onClick="{{ m.pick }}" style="min-height:56px;padding:6px 8px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid {{ m.bd }};border-radius:var(--radius-md);background:{{ m.bg }};color:{{ m.fg }};font:inherit;font-weight:600;font-size:15px;line-height:1.2;cursor:pointer;box-shadow:{{ m.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">
+                <sc-if value="{{ m.isEmp }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><rect x="5" y="2" width="14" height="20" rx="2"></rect><circle cx="12" cy="10" r="3"></circle><path d="M8 17h8"></path></svg></sc-if>
+                <sc-if value="{{ m.isGmail }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg></sc-if>
+                <sc-if value="{{ m.isSys }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg></sc-if>
+                <span>{{ m.label }}</span>
+              </button>
+            </sc-for>
+          </div>
         </div>
-        <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.request }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ L.sendLabel }}</button>
+        <div class="field">
+          <label>{{ L.idLabel }}</label>
+          <input class="input" type="{{ L.idType }}" autocomplete="username" placeholder="{{ L.idPh }}" value="{{ L.idVal }}" onChange="{{ L.onId }}" onKeyDown="{{ L.onPwKey }}" style="min-height:48px;font-size:15px">
+        </div>
+        <div class="field">
+          <label>비밀번호</label>
+          <div style="position:relative;display:flex">
+            <input class="input" type="{{ L.pwType }}" inputmode="numeric" maxlength="4" autocomplete="current-password" placeholder="비밀번호 (숫자 4자리)" value="{{ L.pw }}" onChange="{{ L.onPw }}" onKeyDown="{{ L.onPwKey }}" style="min-height:48px;font-size:15px;flex:1;padding-right:48px">
+            <button type="button" aria-label="{{ L.eyeLabel }}" onClick="{{ L.toggleEye }}" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:none;border:0;color:var(--color-text);cursor:pointer;border-radius:var(--radius-md)">
+              <sc-if value="{{ L.eyeOpen }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><path d="m2 2 20 20"></path></svg></sc-if>
+              <sc-if value="{{ L.eyeClosed }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></sc-if>
+            </button>
+          </div>
+        </div>
+        <sc-if value="{{ L.showDemoPw }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">데모 비밀번호: 1234 · 시스템 관리자 ID: admin</div></sc-if>
+        <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.pwLogin }}" style="min-height:52px;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)"><svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>{{ L.loginLabel }}</button>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">비밀번호를 잊으셨으면 기관 관리자에게 초기화를 요청하세요.</span>
+          <sc-if value="{{ L.canReset }}" hint-placeholder-val="{{ true }}"><button class="btn btn-ghost" onClick="{{ L.startReset }}" style="min-height:40px">처음 로그인 · 비밀번호 찾기</button></sc-if>
+        </div>
       </sc-if>
       <sc-if value="{{ L.isCode }}" hint-placeholder-val="{{ false }}">
         <sc-if value="{{ L.hasInfo }}" hint-placeholder-val="{{ false }}">
@@ -93,6 +117,18 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
         </div>
         <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.verify }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">로그인</button>
         <button class="btn btn-ghost" onClick="{{ L.back }}" style="min-height:44px;align-self:flex-start">처음으로</button>
+      </sc-if>
+      <sc-if value="{{ L.isSetPw }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:10px 12px;border-radius:var(--radius-md);background:var(--color-accent-100);font-size:13px;color:var(--color-accent-700)">인증되었습니다. 앞으로 사번과 함께 쓸 비밀번호를 정해 주세요.</div>
+        <div class="field">
+          <label>새 비밀번호 (숫자 4자리)</label>
+          <input class="input" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" value="{{ L.np1 }}" onChange="{{ L.onNp1 }}" style="min-height:44px;font-size:15px">
+        </div>
+        <div class="field">
+          <label>새 비밀번호 확인</label>
+          <input class="input" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" value="{{ L.np2 }}" onChange="{{ L.onNp2 }}" onKeyDown="{{ L.onNpKey }}" style="min-height:44px;font-size:15px">
+        </div>
+        <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.savePw }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">비밀번호 저장 후 시작</button>
       </sc-if>
       <sc-if value="{{ L.hasErr }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--bad)">
@@ -136,6 +172,13 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
       <sc-if value="{{ hasCombined }}" hint-placeholder-val="{{ false }}"><button onClick="{{ go.combined }}" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border:0;border-radius:var(--radius-md);background:{{ sideBg.combined }};color:{{ sideFg.combined }};font:inherit;font-size:15px;font-weight:500;text-align:left;cursor:pointer"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><rect width="7" height="7" x="3" y="3"></rect><rect width="7" height="7" x="14" y="3"></rect><rect width="7" height="7" x="14" y="14"></rect><rect width="7" height="7" x="3" y="14"></rect></svg>3개기관 종합</button></sc-if>
       <sc-if value="{{ hasUpload }}" hint-placeholder-val="{{ false }}"><button onClick="{{ go.upload }}" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border:0;border-radius:var(--radius-md);background:{{ sideBg.upload }};color:{{ sideFg.upload }};font:inherit;font-size:15px;font-weight:500;text-align:left;cursor:pointer"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m17 8-5-5-5 5"></path><path d="M12 3v12"></path></svg>데이터 업로드</button></sc-if>
       <sc-if value="{{ hasSettings }}" hint-placeholder-val="{{ false }}"><button onClick="{{ go.settings }}" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border:0;border-radius:var(--radius-md);background:{{ sideBg.settings }};color:{{ sideFg.settings }};font:inherit;font-size:15px;font-weight:500;text-align:left;cursor:pointer"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"></path></svg>기준설정</button></sc-if>
+      <sc-if value="{{ hasManage }}" hint-placeholder-val="{{ false }}"><button onClick="{{ go.manage }}" style="display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border:0;border-radius:var(--radius-md);background:{{ sideBg.manage }};color:{{ sideFg.manage }};font:inherit;font-size:15px;font-weight:500;text-align:left;cursor:pointer"><svg viewBox="0 0 24 24" width="20" height="20" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>관리</button>
+        <div style="display:flex;flex-direction:column;gap:2px;margin:2px 0 4px 22px;padding-left:10px;border-left:1px solid var(--aq-line)">
+          <sc-for list="{{ manageSub }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.pick }}" style="display:flex;align-items:center;min-height:38px;padding:0 10px;border:0;border-radius:var(--radius-md);background:{{ m.bg }};color:{{ m.fg }};font:inherit;font-size:14px;font-weight:{{ m.fw }};text-align:left;cursor:pointer" style-hover="background:var(--color-accent-100)">{{ m.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
     </nav>
     <div style="flex:1"></div>
     <div style="display:flex;align-items:center;gap:10px;padding:12px 6px 0;border-top:1px solid var(--aq-line)">
@@ -342,6 +385,15 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
           <h3 style="margin:0;font-size:21px;flex:none;line-height:1.2">{{ T.name }}</h3>
           <span style="display:flex;gap:8px;align-items:center"><span class="tag tag-outline">{{ T.level }}</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">기준일 {{ T.date }}</span></span>
         </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:12px">
+          <sc-for list="{{ T.srcDates }}" as="sd" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid {{ sd.bd }};color:{{ sd.fg }};border-radius:var(--radius-sm)">{{ sd.label }} {{ sd.date }}</span></sc-for>
+        </div>
+        <sc-if value="{{ T.hasStaleWarn }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border:1px solid var(--bad);border-radius:var(--radius-md);font-size:13px;color:var(--bad)">
+            <svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg>
+            <span style="text-wrap:pretty">{{ T.staleWarn }}</span>
+          </div>
+        </sc-if>
         <div>
           <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">재원환자 · EMR 건수 {{ T.patDate }}</div>
           <div style="display:flex;align-items:baseline;gap:4px"><span style="font-family:var(--font-heading);font-weight:600;font-size:48px;line-height:1">{{ T.pat }}</span><span style="font-size:15px">명</span></div>
@@ -669,6 +721,29 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
           </div>
         </sc-for>
       </sc-if>
+      <sc-if value="{{ S.isORGS }}" hint-placeholder-val="{{ false }}">
+        <div style="grid-column:{{ F }};background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow-x:auto">
+          <div style="min-width:640px">
+            <div style="display:grid;grid-template-columns:110px minmax(200px,1fr) 150px 120px;gap:10px;padding:12px 16px;border-bottom:1px solid var(--aq-line);font-weight:600;font-size:14px"><span>기관코드</span><span>기관명</span><span>사용여부</span><span>구성원</span></div>
+            <sc-for list="{{ S.orgs }}" as="o" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:110px minmax(200px,1fr) 150px 120px;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--color-divider)">
+                <span style="display:inline-flex;align-items:center;gap:8px;font-weight:700"><span style="width:10px;height:10px;background:{{ o.color }}"></span>{{ o.code }}<sc-if value="{{ o.isNew }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent">새 기관</span></sc-if></span>
+                <input class="input" value="{{ o.name }}" onChange="{{ o.setName }}" disabled="{{ o.lock }}" style="min-height:40px;font-size:14px">
+                <div style="display:flex;gap:4px"><sc-for list="{{ o.act }}" as="b" hint-placeholder-count="2"><button onClick="{{ b.pick }}" disabled="{{ o.lock }}" style="min-height:36px;padding:0 12px;border:1px solid {{ b.bd }};background:{{ b.bg }};color:{{ b.fg }};font:inherit;font-size:13px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ b.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ b.label }}</button></sc-for></div>
+                <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ o.members }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ S.canAddOrg }}" hint-placeholder-val="{{ false }}">
+          <div style="grid-column:{{ F }};display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:14px 16px;border:1px dashed var(--aq-line);border-radius:var(--radius-lg)">
+            <div class="field" style="width:130px"><label>새 기관코드</label><input class="input" placeholder="예: 4병원" value="{{ S.newOrg.code }}" onChange="{{ S.newOrg.setCode }}" style="min-height:44px"></div>
+            <div class="field" style="flex:1 1 240px"><label>기관명</label><input class="input" placeholder="예: 효사랑○○요양병원" value="{{ S.newOrg.name }}" onChange="{{ S.newOrg.setName }}" onKeyDown="{{ S.newOrg.key }}" style="min-height:44px"></div>
+            <button class="btn btn-primary" onClick="{{ S.newOrg.add }}" style="min-height:44px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5v14"></path></svg>기관 추가</button>
+          </div>
+        </sc-if>
+        <div style="grid-column:{{ F }};font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);text-wrap:pretty">기관 관리는 시스템 개발자(시스템관리자) 전용입니다. 추가한 기관은 자동저장되며, 기준설정 › 시트연동에서 구글시트를 연결하고, 기관·목표에서 목표 점수를 정하세요. 기관은 삭제하지 않고 '중지'로 숨깁니다.</div>
+      </sc-if>
       <sc-if value="{{ S.isHOSP }}" hint-placeholder-val="{{ false }}">
         <sc-for list="{{ S.hosps }}" as="h" hint-placeholder-count="3">
           <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:16px;display:flex;flex-direction:column;gap:12px">
@@ -713,41 +788,6 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
         <div style="grid-column:{{ F }};justify-self:start;display:flex;border:1px solid var(--color-divider);border-radius:var(--radius-md);overflow:hidden">
           <sc-for list="{{ S.uModes }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="min-height:40px;padding:0 16px;border:0;background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:14px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for>
         </div>
-        <sc-if value="{{ S.isUserMode }}" hint-placeholder-val="{{ true }}">
-          <div style="grid-column:{{ F }};display:flex;gap:6px;flex-wrap:wrap">
-            <sc-for list="{{ S.uFilters }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:36px;padding:0 10px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:13px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for>
-          </div>
-          <div style="grid-column:{{ F }};display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <input class="input" type="search" placeholder="이름 · 사번 · 이메일 검색" value="{{ S.uq }}" onChange="{{ S.setUq }}" style="min-height:44px;flex:1 1 220px;max-width:360px">
-            <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.userCount }}</span>
-            <span style="flex:1"></span>
-            <button class="btn btn-primary" onClick="{{ S.addUser }}" style="min-height:44px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5v14"></path></svg>사용자 추가</button>
-          </div>
-          <div style="grid-column:{{ F }};background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:auto;max-height:70vh">
-            <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:820px">
-              <thead><tr>
-                <th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">이름</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">사번</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">이메일</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">계정 구분</th>
-                <sc-for list="{{ S.uCodes }}" as="c" hint-placeholder-count="3"><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0;text-align:center"><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:7px;height:7px;background:{{ c.color }}"></span>{{ c.code }}</span></th></sc-for>
-                <th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">상태</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">최근 접속</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0;text-align:right">관리</th>
-              </tr></thead>
-              <tbody>
-                <sc-for list="{{ S.users }}" as="u" hint-placeholder-count="6">
-                  <tr style="cursor:pointer" style-hover="background:var(--color-accent-100)" onClick="{{ u.open }}">
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;font-weight:700;white-space:nowrap">{{ u.name }}</td>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;font-variant-numeric:tabular-nums;white-space:nowrap">{{ u.emp }}</td>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb, var(--color-text) 72%, transparent)">{{ u.email }}</td>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap">{{ u.kind }}</td>
-                    <sc-for list="{{ u.lv }}" as="l" hint-placeholder-count="3"><td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;text-align:center"><span style="display:inline-block;min-width:52px;padding:2px 8px;font-size:12px;border:1px solid {{ l.bd }};background:{{ l.bg }};color:{{ l.fg }}">{{ l.label }}</span></td></sc-for>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap"><span style="font-size:12px;padding:2px 8px;border:1px solid var(--color-divider);color:{{ u.stFg }}">{{ u.status }}</span></td>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap;font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.last }}</td>
-                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;text-align:right"><button class="btn btn-secondary" onClick="{{ u.open }}" style="min-height:36px;padding:0 12px;font-size:13px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">편집</button></td>
-                  </tr>
-                </sc-for>
-              </tbody>
-            </table>
-            <sc-if value="{{ S.noUsers }}" hint-placeholder-val="{{ false }}"><div style="padding:24px;text-align:center;font-size:14px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">조건에 맞는 사용자가 없습니다.</div></sc-if>
-          </div>
-        </sc-if>
         <sc-if value="{{ S.isHospMode }}" hint-placeholder-val="{{ false }}">
           <div style="grid-column:{{ F }};display:flex;gap:6px;flex-wrap:wrap">
             <sc-for list="{{ S.hospTabs }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="min-height:40px;padding:0 14px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:14px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for>
@@ -756,16 +796,124 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
             <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid var(--color-divider)"><span style="width:10px;height:10px;background:{{ S.hospColor }}"></span><h3 style="margin:0;font-size:19px;flex:1">{{ S.hospCode }} 멤버</h3><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.memberCount }}</span></div>
             <sc-for list="{{ S.members }}" as="m" hint-placeholder-count="4">
               <div style="display:flex;flex-direction:column;gap:6px;padding:10px 0;border-bottom:1px solid var(--color-divider)">
-                <div style="display:flex;gap:6px;align-items:baseline;flex-wrap:wrap"><span style="font-weight:700">{{ m.name }}</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ m.email }}</span><sc-if value="{{ m.inactive }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">사용중지</span></sc-if></div>
+                <div style="display:flex;gap:6px;align-items:baseline;flex-wrap:wrap"><span style="font-weight:700">{{ m.name }}</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ m.emp }}</span><sc-if value="{{ m.inactive }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">사용중지</span></sc-if></div>
                 <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px">
                   <sc-for list="{{ m.opts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:40px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:13px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for>
                 </div>
               </div>
             </sc-for>
-            <button class="btn btn-ghost" onClick="{{ S.addMember }}" style="min-height:48px;align-self:flex-start;margin:4px 0"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5v14"></path></svg>멤버 추가</button>
           </div>
-          <div style="grid-column:{{ F }};font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">'없음'으로 바꾸고 저장하면 이 기관에서 접근이 해제됩니다.</div>
+          <div style="grid-column:{{ F }};font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">기관별 등급을 바꾸면 바로 저장됩니다. '없음'은 이 기관 접근 해제입니다.</div>
         </sc-if>
+        <sc-if value="{{ S.isListMode }}" hint-placeholder-val="{{ true }}">
+        <div style="grid-column:{{ F }};background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:16px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h3 style="margin:0;font-size:20px">신규 사용자 등록</h3><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">사번 또는 Gmail 주소로 로그인합니다. 등록 후 목록의 '편집'에서 비밀번호를 지정하거나 초기화해 전달하세요.</span></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">
+            <input class="input" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px" placeholder="사번" value="{{ S.nu.emp }}" onChange="{{ S.nu.on_emp }}">
+            <input class="input" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px" placeholder="이름" value="{{ S.nu.name }}" onChange="{{ S.nu.on_name }}">
+            <select class="input" value="{{ S.nu.hosp }}" onChange="{{ S.nu.on_hosp }}" disabled="{{ S.nu.hospLock }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ S.nu.hospOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+            <select class="input" value="{{ S.nu.dept }}" onChange="{{ S.nu.on_dept }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ S.nu.deptOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+            <select class="input" value="{{ S.nu.title }}" onChange="{{ S.nu.on_title }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ S.nu.titleOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+            <input class="input" type="email" placeholder="name@gmail.com" value="{{ S.nu.gmail }}" onChange="{{ S.nu.on_gmail }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px">
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <span style="font-size:13px">권한</span><div style="display:flex;border:1px solid var(--aq-line);border-radius:var(--radius-md);overflow:hidden"><sc-for list="{{ S.nu.roles }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="min-height:36px;padding:0 12px;border:0;border-right:1px solid var(--aq-line);background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap" style-active="transform:translateY(1px)">{{ o.label }}</button></sc-for></div>
+            <span style="width:1px;height:24px;background:var(--aq-line)"></span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px">유효기간</span>
+              <input class="input" type="date" value="{{ S.nu.from }}" onChange="{{ S.nu.on_from }}" style="min-height:36px;font-size:13px;padding:0 8px;width:145px">
+              <span>~</span>
+              <input class="input" type="date" value="{{ S.nu.to }}" onChange="{{ S.nu.on_to }}" style="min-height:36px;font-size:13px;padding:0 8px;width:145px">
+              <button onClick="{{ S.nu.noLimit.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ S.nu.noLimit.bd }};background:{{ S.nu.noLimit.bg }};color:{{ S.nu.noLimit.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ S.nu.noLimit.label }}</button>
+            <span style="flex:1"></span>
+            <button class="btn btn-primary" onClick="{{ S.nu.submit }}" style="min-height:40px;padding:0 22px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">등록</button>
+          </div>
+          <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.nu.roleDesc }}</div>
+        </div>
+        <div style="grid-column:{{ F }};background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow-x:auto">
+          <div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--aq-line)">
+              <select class="input" value="{{ S.fHosp }}" onChange="{{ S.setFHosp }}" style="min-height:40px;width:190px;font-size:14px"><sc-for list="{{ S.fHospOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+              <select class="input" value="{{ S.fStat }}" onChange="{{ S.setFStat }}" style="min-height:40px;width:130px;font-size:14px"><sc-for list="{{ S.fStatOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+              <input class="input" type="search" placeholder="사번·이름·Gmail·부서·직책 검색" value="{{ S.uq }}" onChange="{{ S.setUq }}" style="min-height:40px;flex:0 1 260px;font-size:14px">
+              <span style="flex:1"></span>
+              <sc-for list="{{ S.statChips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border:1px solid {{ c.bd }};border-radius:999px;font-size:12px;color:{{ c.fg }}">{{ c.label }}<b>{{ c.n }}</b></span></sc-for>
+              <span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.shownInfo }}</span>
+            </div>
+            <sc-if value="{{ S.showHead }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--aq-line);font-size:12px;font-weight:600;color:color-mix(in srgb, var(--color-text) 62%, transparent)">
+              <span style="flex:1 1 170px">사번 · 이름</span><span style="flex:1 1 170px">소속기관 · 부서</span><span style="flex:1 1 190px">Gmail</span><span style="flex:0 0 130px">권한</span><span style="flex:0 0 170px">상태 · 유효기간</span><span style="flex:0 0 118px">활성</span>
+            </div></sc-if>
+            <sc-for list="{{ S.urows }}" as="u" hint-placeholder-count="3">
+              <div style="border-bottom:1px solid var(--color-divider);border-left:3px solid {{ u.bar }}">
+                <div onClick="{{ u.toggleOpen }}" style="display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:10px 13px;background:{{ u.rowBg }};cursor:pointer" style-hover="background:var(--color-accent-100)">
+                  <div style="flex:1 1 170px;min-width:0;line-height:1.35"><div style="display:flex;gap:6px;align-items:baseline"><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);font-variant-numeric:tabular-nums">{{ u.emp }}</span><b style="font-size:15px">{{ u.name }}</b></div><div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">최근 접속 {{ u.last }}</div></div>
+                  <div style="flex:1 1 170px;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.org }}</div>
+                  <div style="flex:1 1 190px;min-width:0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:{{ u.gmailFg }}">{{ u.gmailShow }}</div>
+                  <span style="flex:0 0 130px"><span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ u.roleBg }};color:{{ u.roleFg }};border:1px solid {{ u.roleBd }}">{{ u.roleTag }}</span></span>
+                  <div style="flex:0 0 170px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span style="padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid {{ u.stBd }};color:{{ u.stFg }};background:{{ u.stBg }}">{{ u.status }}</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.periodTxt }}</span></div>
+                  <div style="flex:0 0 118px;display:flex;align-items:center;gap:8px;margin-left:auto"><button role="switch" aria-checked="{{ u.on }}" aria-label="활성" onClick="{{ u.toggleAct }}" style="flex:none;width:44px;height:24px;border-radius:999px;border:1px solid {{ u.swBd }};background:{{ u.swBg }};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:2px;left:{{ u.knob }};width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);transition:left .15s"></span></button>
+                  <button class="btn btn-ghost" onClick="{{ u.toggleOpen }}" style="min-height:36px;padding:0 10px;font-size:14px;font-weight:600">{{ u.editLabel }}</button></div>
+                </div>
+                <sc-if value="{{ u.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin:0 12px 12px;padding:14px;border:1px solid var(--color-accent);border-radius:var(--radius-md);display:flex;flex-direction:column;gap:12px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">
+                      <input class="input" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px" placeholder="사번" value="{{ u.emp }}" onChange="{{ u.on_emp }}" onBlur="{{ u.commit }}" onKeyDown="{{ u.key }}">
+                      <input class="input" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px" placeholder="이름" value="{{ u.name }}" onChange="{{ u.on_name }}" onBlur="{{ u.commit }}" onKeyDown="{{ u.key }}">
+                      <select class="input" value="{{ u.hosp }}" onChange="{{ u.on_hosp }}" disabled="{{ u.hospLock }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ u.hospOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+                      <select class="input" value="{{ u.dept }}" onChange="{{ u.on_dept }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ u.deptOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+                      <select class="input" value="{{ u.title }}" onChange="{{ u.on_title }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 8px"><sc-for list="{{ u.titleOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+                      <input class="input" type="email" placeholder="name@gmail.com" value="{{ u.gmail }}" onChange="{{ u.on_gmail }}" onBlur="{{ u.commit }}" onKeyDown="{{ u.key }}" style="min-height:40px;font-size:14px;width:100%;box-sizing:border-box;padding:0 10px;font-family:ui-monospace,Menlo,Consolas,monospace">
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                      <span style="font-size:13px">권한</span><div style="display:flex;border:1px solid var(--aq-line);border-radius:var(--radius-md);overflow:hidden"><sc-for list="{{ u.roles }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="min-height:36px;padding:0 12px;border:0;border-right:1px solid var(--aq-line);background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap" style-active="transform:translateY(1px)">{{ o.label }}</button></sc-for></div>
+                      <span style="width:1px;height:24px;background:var(--aq-line)"></span>
+                      <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px">유효기간</span>
+              <input class="input" type="date" value="{{ u.from }}" onChange="{{ u.on_from }}" style="min-height:36px;font-size:13px;padding:0 8px;width:145px">
+              <span>~</span>
+              <input class="input" type="date" value="{{ u.to }}" onChange="{{ u.on_to }}" style="min-height:36px;font-size:13px;padding:0 8px;width:145px">
+              <button onClick="{{ u.noLimit.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ u.noLimit.bd }};background:{{ u.noLimit.bg }};color:{{ u.noLimit.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ u.noLimit.label }}</button>
+                      <span style="width:1px;height:24px;background:var(--aq-line)"></span>
+                      <button class="btn btn-secondary" onClick="{{ u.resetPw }}" style="min-height:36px;padding:0 12px;font-size:13px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md);white-space:nowrap" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">비밀번호 초기화</button>
+                      <button class="btn btn-secondary" onClick="{{ u.openPw }}" style="min-height:36px;padding:0 12px;font-size:13px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md);white-space:nowrap" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">비밀번호 지정</button>
+                      <sc-if value="{{ u.pwOpen }}" hint-placeholder-val="{{ false }}">
+                        <input class="input" type="text" inputmode="numeric" maxlength="4" placeholder="4자리" value="{{ u.pwDraft }}" onChange="{{ u.on_pw }}" onKeyDown="{{ u.pwKey }}" style="min-height:36px;width:80px;font-size:14px;padding:0 8px;letter-spacing:.2em">
+                        <button class="btn btn-primary" onClick="{{ u.applyPw }}" style="min-height:36px;padding:0 12px;font-size:13px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">지정</button>
+                      </sc-if>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px">
+                      <span style="color:color-mix(in srgb, var(--color-text) 62%, transparent);white-space:nowrap">세부 권한</span>
+                      <span>현황뷰어</span><button onClick="{{ u.vv.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ u.vv.bd }};background:{{ u.vv.bg }};color:{{ u.vv.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ u.vv.label }}</button><button onClick="{{ u.vu.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ u.vu.bd }};background:{{ u.vu.bg }};color:{{ u.vu.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ u.vu.label }}</button>
+                      <span style="margin-left:8px">알림</span><button onClick="{{ u.av.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ u.av.bd }};background:{{ u.av.bg }};color:{{ u.av.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ u.av.label }}</button><button onClick="{{ u.au.pick }}" style="min-height:32px;padding:0 12px;border:1px solid {{ u.au.bd }};background:{{ u.au.bg }};color:{{ u.au.fg }};font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:var(--radius-md);white-space:nowrap" style-active="transform:translateY(1px)">{{ u.au.label }}</button>
+                      <button class="btn btn-ghost" onClick="{{ u.detail }}" style="min-height:32px;padding:0 10px;font-size:13px">기관별 권한 · 상세</button>
+                    </div>
+                    <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.roleDesc }}</div>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                      <span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);flex:1">최근 접속 {{ u.last }} · {{ u.pwStatus }}{{ u.extraNote }}</span>
+                      <button class="btn btn-ghost" onClick="{{ u.del }}" style="min-height:36px;padding:0 12px;font-weight:600" style-hover="color:var(--bad)">삭제</button>
+                      <button class="btn btn-primary" onClick="{{ u.done }}" style="min-height:36px;padding:0 18px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">완료</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ S.noUsers }}" hint-placeholder-val="{{ false }}"><div style="padding:24px;text-align:center;font-size:14px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">조건에 맞는 사용자가 없습니다.</div></sc-if>
+          </div>
+        </div>
+        <div style="grid-column:{{ F }};font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);text-wrap:pretty">편집 내용은 자동저장됩니다. 선택·권한·활성·유효기간은 바꾸는 즉시, 사번·이름·Gmail은 엔터를 누르거나 다른 칸으로 이동하면 저장됩니다. 비밀번호 초기화 값은 1234이며 다음 로그인 때 변경해야 합니다.</div>
+        </sc-if>
+        <div style="grid-column:{{ F }};display:flex;flex-direction:column;gap:8px">
+          <button onClick="{{ S.toggleHist }}" style="display:flex;align-items:center;gap:8px;align-self:flex-start;min-height:40px;background:none;border:0;color:var(--color-text);font:inherit;cursor:pointer;padding:0">
+            <svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transform:{{ S.histRot }}"><path d="m9 18 6-6-6-6"></path></svg>
+            <span style="font-family:var(--font-heading);font-weight:600;font-size:20px">권한 변경 이력</span><span style="font-size:13px;color:var(--color-accent-700)">{{ S.histCount }}건 · {{ S.histHint }}</span>
+          </button>
+          <sc-if value="{{ S.histOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid var(--aq-line);border-radius:var(--radius-md);background:var(--aq-card)">
+              <sc-for list="{{ S.hist }}" as="h" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:140px 90px minmax(0,1fr);gap:10px;padding:8px 12px;border-bottom:1px solid var(--color-divider);font-size:13px"><span style="color:color-mix(in srgb, var(--color-text) 62%, transparent);font-variant-numeric:tabular-nums">{{ h.at }}</span><span>{{ h.who }}</span><span style="min-width:0;overflow-wrap:anywhere">{{ h.text }}</span></div>
+              </sc-for>
+              <sc-if value="{{ S.noHist }}" hint-placeholder-val="{{ false }}"><div style="padding:14px;font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">아직 변경 이력이 없습니다.</div></sc-if>
+            </div>
+          </sc-if>
+        </div>
       </sc-if>
       <sc-if value="{{ S.isSYNC }}" hint-placeholder-val="{{ false }}">
         <div style="grid-column:1 / -1;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:var(--radius-md);background:var(--color-accent-100);color:var(--color-accent-800);font-size:13px">
@@ -810,7 +958,7 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
                         </div>
                       </div>
                     </sc-if>
-                    <sc-if value="{{ sr.changed }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:var(--color-accent-700)">URL이 변경되었습니다. [탭 불러오기] → [연결 테스트] 후 하단 [저장]을 누르세요.</div></sc-if>
+                    <sc-if value="{{ sr.changed }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:var(--color-accent-700)">URL이 변경되었습니다. 자동저장되었습니다. [탭 불러오기] → [연결 테스트]로 연결을 확인하세요.</div></sc-if>
                   </div>
                   <sc-if value="{{ sr.hasTabErr }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:var(--bad)">{{ sr.tabErr }}</div></sc-if>
                   <div style="display:flex;flex-direction:column;gap:6px">
@@ -863,12 +1011,12 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
           </sc-for>
         </div>
       </sc-if>
-      <sc-if value="{{ S.dirty }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ S.showSaveBar }}" hint-placeholder-val="{{ false }}">
         <div style="position:fixed;left:{{ SBL }};right:0;bottom:{{ SBB }};z-index:25;background:var(--aq-card);border-top:1px solid var(--aq-line);box-shadow:var(--shadow-md)">
-          <div style="max-width:{{ MAXW }};margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:8px">
-            <span style="flex:1;font-size:13px">변경사항이 있습니다</span>
-            <button class="btn btn-secondary" onClick="{{ S.revert }}" style="min-height:44px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">되돌리기</button>
-            <button class="btn btn-primary" disabled="{{ S.saving }}" onClick="{{ S.save }}" style="min-height:44px;padding:0 20px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ S.saveLabel }}</button>
+          <div style="max-width:{{ MAXW }};margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px;min-height:44px">
+            <span style="width:10px;height:10px;border-radius:50%;flex:none;background:{{ S.saveDot }}"></span>
+            <span style="flex:1;font-size:14px;color:{{ S.saveFg }};text-wrap:pretty">{{ S.saveMsg }}</span>
+            <sc-if value="{{ S.saveRetry }}" hint-placeholder-val="{{ false }}"><button class="btn btn-primary" onClick="{{ S.save }}" style="min-height:40px;padding:0 18px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">다시 저장</button></sc-if>
           </div>
         </div>
       </sc-if>
@@ -911,6 +1059,24 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
               </sc-if>
               <div class="field"><label>비고</label><input class="input" value="{{ S.sh.memo }}" onChange="{{ S.sh.setMemo }}" style="min-height:44px"></div>
               <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">최근접속 {{ S.sh.last }} (읽기전용)</div>
+              <sc-if value="{{ S.sh.canPw }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--aq-line);border-radius:var(--radius-md)">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-weight:700;font-size:15px">비밀번호 관리</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.sh.pwStatus }}</span></div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <input class="input" type="text" autocomplete="off" inputmode="numeric" maxlength="4" placeholder="숫자 4자리 (예: 1234)" value="{{ S.sh.pwDraft }}" onChange="{{ S.sh.setPwDraft }}" style="min-height:44px;flex:1 1 200px">
+                    <button class="btn btn-secondary" disabled="{{ S.sh.pwBusy }}" onClick="{{ S.sh.setPw }}" style="min-height:44px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">비밀번호 지정</button>
+                  </div>
+                  <button class="btn btn-secondary" disabled="{{ S.sh.pwBusy }}" onClick="{{ S.sh.resetPw }}" style="min-height:44px;align-self:flex-start;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">임시 비밀번호로 초기화</button>
+                  <sc-if value="{{ S.sh.hasPwMsg }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding:10px 12px;border-radius:var(--radius-md);background:var(--color-accent-100);font-size:13px;color:var(--color-accent-800);display:flex;flex-direction:column;gap:4px">
+                      <span>{{ S.sh.pwMsg }}</span>
+                      <sc-if value="{{ S.sh.hasTemp }}" hint-placeholder-val="{{ false }}"><code style="font-size:18px;letter-spacing:.06em;font-weight:700;user-select:all">{{ S.sh.pwTemp }}</code></sc-if>
+                    </div>
+                  </sc-if>
+                  <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">지정하거나 초기화한 비밀번호는 사용자가 다음 로그인 때 새 비밀번호로 바꿔야 합니다.</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ S.sh.pwNeedSave }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">비밀번호는 사용자를 저장한 뒤 지정할 수 있습니다.</div></sc-if>
               <sc-if value="{{ S.sh.hasErr }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:var(--bad)">{{ S.sh.err }}</div></sc-if>
               <div style="display:flex;gap:8px;align-items:center">
                 <sc-if value="{{ S.sh.isEdit }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ S.sh.del }}" style="min-height:44px;color:var(--bad)">삭제</button></sc-if>
@@ -949,7 +1115,7 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
 </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;demo&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'demo'&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;showDemo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;latency&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;demo&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'demo'&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;showDemo&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;latency&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;view&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;pc&quot;,&quot;mobile&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'pc'|'mobile'&quot;}}">
 const HCOL={'1병원':'var(--h1)','2병원':'var(--h2)','3병원':'var(--h3)'};
 const IND=[
   {k:'doc',name:'의사',full:'의사 1인당 환자수',sec:'doctor',crit:'DOC_Q',tk:'docR'},
@@ -962,7 +1128,8 @@ const UHEAD=['email','name','role','hosp','affil','dept','active','memo','lastSe
 const HHEAD=['code','name','patSheet','dbSheet','patDateCol','patValCol','nurseCol','doctorCol','wardCol','targetDoc','targetRn','targetNurse','pharmRate','active'];
 const NUMCONF=['RN_SHARE_BONUS','RN_SHARE_PENALTY','SESSION_DAYS','CACHE_MIN','AUTO_REFRESH_MIN'];
 const CONF_DESC={APP_TITLE:'앱 제목',EVAL_START:'적정성평가 기간 시작일',EVAL_END:'적정성평가 기간 종료일',AN_CODES:'간호조무 인력으로 합산할 근무표 코드 (운영 서버 시계열 생성 시 적용)',RN_SHARE_BONUS:'간호사 비율 가산 기준(%)',RN_SHARE_PENALTY:'간호사 비율 감산 기준(%)',SESSION_DAYS:'로그인 유지 일수',UPLOAD_MIN_LEVEL:'데이터 업로드를 할 수 있는 최소 기관 권한',CACHE_MIN:'원천 시트 캐시 시간(분) — 시트 수정이 앱에 반영되는 최대 지연. 1~10 권장',AUTO_REFRESH_MIN:'화면 자동 새로고침 간격(분), 0 = 끔'};
-const SUBTABS=[['CRIT','평가기준'],['HOSP','기관·목표'],['SYNC','시트연동'],['CONF','환경설정'],['USERS','사용자권한'],['LOGS','접속로그']];
+const SUBTABS=[['CRIT','평가기준'],['HOSP','기관·목표'],['SYNC','시트연동'],['CONF','환경설정'],['ORGS','기관 관리'],['USERS','사용자 계정 관리'],['LOGS','접속로그']];
+const TABGROUP={settings:['CRIT','HOSP','SYNC','CONF'],manage:['ORGS','USERS','LOGS']};
 const SRC=[{kind:'pat',title:'재원환자',sub:'EMR 요양병원 일자별 건수',urlCol:14,tabCol:2,cols:[[4,'일자 열'],[5,'재원환자 열']]},
   {kind:'db',title:'근무표 DB',sub:'간호·의사 근무표 + 병실현황판',urlCol:15,tabCol:3,cols:[[6,'간호 시작열'],[7,'의사 시작열'],[8,'병동 열']]}];
 function lagDays(today,last){ if(!today||!last) return null; return Math.round((Date.parse(today)-Date.parse(last))/86400000); }
@@ -977,6 +1144,7 @@ function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
 function seg(label,active,pick){ return {label,pick,bg:active?'var(--color-accent)':'var(--aq-btn-s-bg)',fg:active?'#fff':'var(--color-text)',bd:active?'var(--color-accent-700)':'var(--aq-btn-s-bd)',sh:active?'inset 0 2px 3px color-mix(in srgb,#000 28%,transparent)':'var(--aq-btn-s)'}; }
 const WI0={doc:0,rn:0,an:0,pat:0};
 
+const PWX=p=>'aq#'+String(p)+'#hs';
 class Component extends DCLogic {
   state={ready:false,theme:null,boot:null,login:{step:'email',email:'',code:'',err:'',info:'',tries:0,busy:false},tab:'today',hosp:0,preset:'eval',start:'',end:'',dStart:'',dEnd:'',dash:null,loading:false,admTab:'CRIT',adm:null,dirty:{},sheet:null,hov:{},wi:WI0,toast:'',toastBad:false,hospOpen:{},uFilter:'전체',saving:false};
 
@@ -997,6 +1165,7 @@ class Component extends DCLogic {
       this.DATA.uploads=this.DATA.uploads||[];
       const st=AQ.selfTest(); console.log('[AQ] selfTest().pass =',st.pass);
       this.goldenCheck();
+      this.demoRestore();
       this.api=this.makeApi();
     }
     this.session=localStorage.getItem(this.live?'aq-token':'aq-session')||null;
@@ -1020,7 +1189,7 @@ class Component extends DCLogic {
   }
   autoTick(onVisible){
     this.checkVersion();
-    const s=this.state; if(!s.boot||!s.dash||s.loading||s.tab==='settings') return;
+    const s=this.state; if(!s.boot||!s.dash||s.loading||s.tab==='settings'||s.tab==='manage') return;
     const m=Number(s.boot.autoMin==null?5:s.boot.autoMin), age=Date.now()-(this._lastLoad||0);
     if((m>0&&age>=m*60000)||(onVisible&&age>=60000)) this.load(s.start,s.end,true);
   }
@@ -1153,6 +1322,20 @@ class Component extends DCLogic {
       },
       requestCode(email){ return {ok:true,msg:'등록된 사용자라면 인증코드가 발송됩니다(10분 유효)'}; },
       empEmail(emp){ return {ok:true,email:AQX.emailForEmp(D,emp)}; },
+      pwLogin(emp,pw,kind){
+        const em=AQX.loginEmail(D,kind,emp), u=em&&AQX.findUser(D,em), pws=JSON.parse(localStorage.getItem('aq-demo-pw')||'{}');
+        if(!u||pw!==(pws[String(em).toLowerCase()]||'1234')) return {ok:false,msg:'ID 또는 비밀번호가 올바르지 않거나 접근이 차단된 계정입니다.'};
+        self.session=u.email; log(u.email,u.name,'로그인',{emp:'사번',gmail:'Gmail',sys:'시스템관리자'}[kind]+'+비밀번호'); const ur=D.users.find(x=>String(x.email).toLowerCase()===String(em).toLowerCase()); return {ok:true,token:'demo-'+u.email,mustChange:!!(ur&&ur.pwReset)};
+      },
+      setPassword(pw){ const pws=JSON.parse(localStorage.getItem('aq-demo-pw')||'{}'), em=String(self.session).toLowerCase(); pws[em]=pw; localStorage.setItem('aq-demo-pw',JSON.stringify(pws));
+        const u=D.users.find(x=>String(x.email).toLowerCase()===em); if(u){ u.pwReset=false; u.pwSetAt=new Date(Date.now()+9*3600000).toISOString().slice(0,16).replace('T',' '); } return {ok:true}; },
+      adminSetPassword(email,pw){
+        const me=AQX.findUser(D,self.session), perm=me&&AQX.permissions(me,activeH()), em=String(email).toLowerCase(), u=D.users.find(x=>String(x.email).toLowerCase()===em);
+        if(!u) return {ok:false,msg:'등록되지 않은 사용자입니다.'};
+        const acc=AQX.parseAccess(u.access); if(!perm||!(perm.sys||(u.role!=='시스템관리자'&&perm.adminHosps.some(c=>acc[c])))) return {ok:false,msg:'이 사용자의 비밀번호를 바꿀 권한이 없습니다.'};
+        const pws=JSON.parse(localStorage.getItem('aq-demo-pw')||'{}'); pws[em]=pw; localStorage.setItem('aq-demo-pw',JSON.stringify(pws));
+        u.pwReset=true; u.pwSetAt=new Date(Date.now()+9*3600000).toISOString().slice(0,16).replace('T',' '); log(me.email,me.name,'비밀번호 지정',u.email); return {ok:true};
+      },
       google(){ return {ok:false,msg:'데모에서는 Google 로그인 대신 아래 Gmail 인증코드를 사용하세요 (아무 숫자 6자리).'}; },
       verifyCode(email,code){
         const u=AQX.findUser(D,email); if(!u) return {ok:false,msg:'현재 계정은 등록되어 있지 않습니다. 관리자에게 요청하세요'};
@@ -1237,7 +1420,7 @@ class Component extends DCLogic {
     const kv={}; (st.data||[]).forEach(r=>{kv[r.key]=r.value;});
     const today=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
     const D={meta:{today},config:kv.config||{},hospitals:kv.hospitals||[],criteriaRows:kv.criteria||AQ.DEFAULT_CRITERIA_ROWS,
-      users:(us.data||[]).map(u=>({email:u.email,name:u.name,empNo:u.emp_no||'',role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||'',lastSeen:u.last_seen?this.sbTs(u.last_seen):''})),
+      users:(us.data||[]).map(u=>({...(u.profile||{}),email:u.email,name:u.name,empNo:u.emp_no||'',pwReset:!!u.pw_reset,pwSetAt:u.pw_set_at?this.sbTs(u.pw_set_at):'',role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||'',lastSeen:u.last_seen?this.sbTs(u.last_seen):''})),
       logs:(this.DATA&&this.DATA.logs)||[],uploads:(this.DATA&&this.DATA.uploads)||[],series:{},srcMeta:{}};
     const by={}; (se.data||[]).forEach(r=>{(by[r.code]=by[r.code]||{})[r.kind]=r;});
     let oldest=null;
@@ -1279,7 +1462,7 @@ class Component extends DCLogic {
     else if(which==='CONF') r=await put('config',D.config);
     else if(which==='HOSP') r=await put('hospitals',D.hospitals);
     else if(which==='USERS'){
-      const rows=D.users.map(u=>({email:String(u.email).trim().toLowerCase(),name:u.name||'',emp_no:String(u.empNo||'').trim().toUpperCase()||null,role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||''}));
+      const rows=D.users.map(u=>({email:String(u.email).trim().toLowerCase(),name:u.name||'',emp_no:String(u.empNo||'').trim().toUpperCase()||null,role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||'',profile:Object.fromEntries(AQX.PROFILE.map(k=>[k,u[k]==null?'':u[k]]))}));
       r=await sb.from('app_users').upsert(rows,{onConflict:'email'}).select('email');
       if(!r.error){ const keep=new Set(rows.map(x=>x.email)),gone=(this._sbUsers||[]).filter(e=>!keep.has(e)); if(gone.length) r=await sb.from('app_users').delete().in('email',gone).select('email'); }
     }
@@ -1304,6 +1487,18 @@ class Component extends DCLogic {
           return {ok:true,msg:'등록된 사용자라면 인증코드가 발송됩니다 (메일함·스팸함 확인)'}; }
         case 'empEmail':{ const {data,error}=await sb.rpc('aq_email_for_emp',{p_emp:String(a[0]||'')}); if(error) return fail('사번 확인 실패: '+error.message); return {ok:true,email:data||''}; }
         case 'google':{ const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}}); if(error) return fail('Google 로그인 실패: '+error.message); return {ok:true,redirect:true}; }
+        case 'pwLogin':{ const kind=a[2]||'emp', byMail=kind==='gmail', bad='ID 또는 비밀번호가 올바르지 않거나 접근이 차단된 계정입니다.';
+          const {data:em,error:e1}=await sb.rpc('aq_login_email',{p_kind:kind,p_id:String(a[0]||'')}); if(e1) return fail('로그인 확인 실패: '+e1.message); if(!em) return fail(bad);
+          const email=String(em).toLowerCase(), {error}=await sb.auth.signInWithPassword({email,password:PWX(a[1]||'')});
+          if(error) return fail(/confirm/i.test(error.message)?'이메일 인증이 필요합니다. "처음 로그인 · 비밀번호 찾기"를 이용하세요.':bad);
+          this.session=email; await this.sbLoad(true);
+          const u=AQX.findUser(this.DATA,email);
+          if(!u){ await sb.auth.signOut(); this.session=null; this.DATA=null; return fail('현재 계정은 등록되어 있지 않습니다. 관리자에게 요청하세요'); }
+          sb.rpc('aq_touch').then(()=>{},()=>{}); this._pend.logs.push({email,name:u.name,act:'로그인',detail:{emp:'사번',gmail:'Gmail',sys:'시스템관리자'}[kind]+'+비밀번호'}); await this.sbFlush();
+          const ur=this.DATA.users.find(x=>String(x.email).toLowerCase()===email); return {ok:true,token:email,mustChange:!!(ur&&ur.pwReset)}; }
+        case 'adminSetPassword':{ const {error}=await sb.rpc('aq_admin_set_password',{p_email:String(a[0]).toLowerCase(),p_pw:PWX(a[1])}); if(error) return fail('비밀번호 지정 실패: '+error.message);
+          const u=this.DATA.users.find(x=>String(x.email).toLowerCase()===String(a[0]).toLowerCase()); if(u){ u.pwReset=true; u.pwSetAt=this.sbTs(new Date().toISOString()); } return {ok:true}; }
+        case 'setPassword':{ const {error}=await sb.auth.updateUser({password:PWX(a[0])}); if(error) return fail('비밀번호 저장 실패: '+error.message); await sb.rpc('aq_pw_changed').then(()=>{},()=>{}); return {ok:true}; }
         case 'verifyCode':{ const email=String(a[0]).trim().toLowerCase();
           const {error}=await sb.auth.verifyOtp({email,token:String(a[1]),type:'email'});
           if(error) return fail('인증코드가 올바르지 않거나 만료되었습니다.');
@@ -1359,7 +1554,25 @@ class Component extends DCLogic {
         ['api_'+name](...args));
     }
     if(this.props.latency!==false) await wait(name==='dashboard'?420:180);
-    return this.api[name](...a);
+    const res=await this.api[name](...a);
+    if(res&&res.ok&&!/^(dashboard|bootstrap|logs|adminGet|sheetTabs|sheetPreview|currentSummary|uploadHistory|sourceInfo|version|empEmail|requestCode)$/.test(name)) this.demoPersist();
+    return res;
+  }
+  /* 데모 모드: 등록한 사용자·설정 변경을 이 브라우저에 보관 (새로고침·업데이트 후에도 유지) */
+  demoPersist(){
+    const D=this.DATA; if(!D) return;
+    const base={v:1,savedAt:new Date().toISOString(),users:D.users,hospitals:D.hospitals,config:D.config,criteriaRows:D.criteriaRows,logs:(D.logs||[]).slice(0,300),uploads:(D.uploads||[]).slice(0,100)};
+    try{ localStorage.setItem('aq-demo-store-v1',JSON.stringify({...base,series:D.series})); }
+    catch(e){ try{ localStorage.setItem('aq-demo-store-v1',JSON.stringify(base)); }catch(_){ console.warn('데모 저장 실패',_); } }
+  }
+  demoRestore(){
+    try{
+      const t=localStorage.getItem('aq-demo-store-v1'); if(!t) return;
+      const o=JSON.parse(t), D=this.DATA;
+      ['users','hospitals','config','criteriaRows','logs','uploads'].forEach(k=>{ if(o[k]!=null) D[k]=o[k]; });
+      if(o.series) Object.keys(o.series).forEach(c=>{ D.series[c]=o.series[c]; });
+      console.log('[AQ] 데모 저장 데이터 복원:',o.savedAt);
+    }catch(e){ console.warn('데모 저장 데이터 복원 실패',e); }
   }
   storeKey(){ return this.live?'aq-token':'aq-session'; }
 
@@ -1397,7 +1610,30 @@ class Component extends DCLogic {
     const r=await this.call('verifyCode',L.email.trim(),L.code);
     if(!r.ok){ const t=L.tries+1; if(t>=5) return this.setLogin({busy:false,step:'email',code:'',tries:0,info:'',err:'인증코드 5회 오류로 무효화되었습니다. 다시 요청해 주세요.'}); return this.setLogin({busy:false,tries:t,err:r.msg||'인증에 실패했습니다.'}); }
     if(this.live) this.session=r.token;
+    if(L.reset) return this.setLogin({busy:false,step:'setpw',np1:'',np2:'',err:'',info:''});
     this.setLogin({busy:false}); this.afterLogin();
+  }
+  async pwLogin(){
+    const L=this.state.login, kind=L.mode||'emp', id=String(kind==='gmail'?L.email:kind==='sys'?L.sysId:L.emp||'').trim(), pw=String(L.pw||'');
+    const nm={emp:'사번',gmail:'Gmail 주소',sys:'시스템 관리자 ID'}[kind];
+    if(!id||!pw) return this.setLogin({err:nm+'와(과) 비밀번호를 입력해 주세요.'});
+    if(kind==='gmail'&&!EMAIL_RE.test(id)) return this.setLogin({err:'Gmail 주소 형식을 확인해 주세요.'});
+    if((L.pwFails||0)>=5&&Date.now()-(L.pwLockAt||0)<60000) return this.setLogin({err:'5회 실패로 1분간 로그인이 제한됩니다.'});
+    this.setLogin({busy:true,err:''});
+    const r=await this.call('pwLogin',id,pw,kind);
+    if(!r.ok){ const f=(L.pwFails||0)>=5?1:(L.pwFails||0)+1; return this.setLogin({busy:false,pw:'',pwFails:f,pwLockAt:f>=5?Date.now():0,err:(r.msg||r.message)+(f<5?' ('+f+'/5)':' · 1분 후 다시 시도하세요.')}); }
+    if(this.live) this.session=r.token;
+    if(r.mustChange) return this.setLogin({busy:false,pw:'',pwFails:0,step:'setpw',np1:'',np2:'',info:''});
+    this.setLogin({busy:false,pw:'',pwFails:0}); this.afterLogin();
+  }
+  async savePw(){
+    const L=this.state.login, p=String(L.np1||'');
+    if(!/^\d{4}$/.test(p)) return this.setLogin({err:'비밀번호는 숫자 4자리로 입력해 주세요.'});
+    if(p!==L.np2) return this.setLogin({err:'비밀번호 확인이 일치하지 않습니다.'});
+    this.setLogin({busy:true,err:''});
+    const r=await this.call('setPassword',p);
+    if(!r.ok) return this.setLogin({busy:false,err:r.msg||r.message});
+    this.setLogin({busy:false,reset:false,np1:'',np2:''}); this.toast('비밀번호가 저장되었습니다. 다음부터 사번과 비밀번호로 로그인하세요.'); this.afterLogin();
   }
   async demoLogin(email){
     this.setLogin({email,err:'',info:'',busy:true});
@@ -1430,24 +1666,32 @@ class Component extends DCLogic {
     this.setState({preset:k,dStart:p.start,dEnd:p.end,wi:WI0}); this.load(p.start,p.end);
   }
   query(){ const {dStart,dEnd}=this.state; if(!dStart||!dEnd) return this.toast('기간을 확인해 주세요.',true); this.setState({wi:WI0}); this.load(dStart,dEnd); }
-  goTab(t){ this.setState({tab:t,hov:{},sheet:null}); if(t==='settings'&&!this.state.adm) this.loadAdmin(); if(t==='upload') this.upInit(); window.scrollTo(0,0); }
+  goManage(k){ if(this.state.tab!=='manage') this.goTab('manage'); this.setState({admTab:k,sheet:null}); window.scrollTo(0,0); }
+  goTab(t){ const g=TABGROUP[t], a=this.state.adm; this.setState({tab:t,hov:{},sheet:null,...(g&&a?{admTab:g.includes(this.state.admTab)&&a.avail.includes(this.state.admTab)?this.state.admTab:(a.avail.find(k=>g.includes(k))||this.state.admTab)}:{})}); if(g&&!a) this.loadAdmin(); if(t==='upload') this.upInit(); window.scrollTo(0,0); }
 
   async loadAdmin(){
     const a=await this.call('adminGet'); if(!a.ok){ if(a.error==='NET') return; return this.logout(); }
     if(!a.perm) a.perm=this.state.boot.perm;
     if(a.CONF) a.CONF=a.CONF.map(r=>[r[0],r[1],r[2]||CONF_DESC[r[0]]||'']);
     const logs=await this.call('logs');
-    const avail=SUBTABS.map(t=>t[0]).filter(k=>k==='LOGS'?!!(a.USERS||a.CRIT):k==='SYNC'?a.perm.manageHosps.length>0:(k==='HOSP'?a.HOSP.length>0:!!a[k]));
+    const avail=SUBTABS.map(t=>t[0]).filter(k=>k==='ORGS'?!!a.HOSP&&a.perm.sys:k==='LOGS'?!!(a.USERS||a.CRIT):k==='SYNC'?a.perm.manageHosps.length>0:(k==='HOSP'?a.HOSP.length>0:!!a[k]));
     this._origHosp={}; (a.HOSP||[]).forEach(r=>{this._origHosp[r[0]]=r.slice();});
     this.setState({urlEdit:{}});
     if(avail.includes('SYNC')&&!this.state.srcInfo) this.call('sourceInfo').then(r=>r&&r.ok&&this.setState({srcInfo:r}));
     this.setState(s=>({adm:{CRIT:a.CRIT,HOSP:a.HOSP,CONF:a.CONF,USERS:a.USERS?a.USERS.rows:null,logs,hospCodes:a.hospCodes,perm:a.perm,avail},dirty:{},
-      admTab:avail.includes(s.admTab)?s.admTab:avail[0],uHosp:a.perm.adminHosps.includes(s.uHosp)?s.uHosp:a.perm.adminHosps[0]}));
+      admTab:(TABGROUP[s.tab]||avail).includes(s.admTab)&&avail.includes(s.admTab)?s.admTab:(avail.find(k=>(TABGROUP[s.tab]||avail).includes(k))||avail[0]),uHosp:a.perm.adminHosps.includes(s.uHosp)?s.uHosp:a.perm.adminHosps[0]}));
   }
   setLevel(i,code,lv){ const rows=this.state.adm.USERS.map(r=>r.slice()),acc=AQX.parseAccess(rows[i][3]); if(lv) acc[code]=lv; else delete acc[code]; rows[i][3]=AQX.formatAccess(acc,this.state.adm.hospCodes); this.admRows('USERS',rows); }
   sheetLevel(code,lv){ const acc=AQX.parseAccess(this.state.sheet.draft[3]); if(lv) acc[code]=lv; else delete acc[code]; this.sheetSet(3,AQX.formatAccess(acc,this.state.adm.hospCodes)); }
-  admSet(which,i,col,val){ this.setState(s=>{const rows=s.adm[which].map(r=>r.slice()); rows[i][col]=val; return {adm:{...s.adm,[which]:rows},dirty:{...s.dirty,[which]:true}};}); }
-  admRows(which,rows){ this.setState(s=>({adm:{...s.adm,[which]:rows},dirty:{...s.dirty,[which]:true}})); }
+  admSet(which,i,col,val){ this.setState(s=>{const rows=s.adm[which].map(r=>r.slice()); rows[i][col]=val; return {adm:{...s.adm,[which]:rows},dirty:{...s.dirty,[which]:true}};}); if(which!=='USERS') this.autoSave(which); }
+  admRows(which,rows){ this.setState(s=>({adm:{...s.adm,[which]:rows},dirty:{...s.dirty,[which]:true}})); if(which!=='USERS') this.autoSave(which); }
+  autoSave(which){
+    this._ver=this._ver||{}; this._ver[which]=(this._ver[which]||0)+1;
+    this._asT=this._asT||{}; clearTimeout(this._asT[which]);
+    this.setState({saveInfo:{state:'pending',which}});
+    this._asT[which]=setTimeout(()=>this.saveAdmin(which,true),1200);
+  }
+  setSaveInfo(state,which,msg){ const at=new Date(Date.now()+9*3600000).toISOString().slice(11,19); this.setState({saveInfo:{state,which,msg:msg||'',at}}); }
   critAdd(code,name){
     const rows=this.state.adm.CRIT.map(r=>r.slice()); let last=-1,n=0;
     rows.forEach((r,i)=>{if(String(r[0]).trim()===code){last=i;n++;}});
@@ -1455,29 +1699,200 @@ class Component extends DCLogic {
     this.admRows('CRIT',rows);
   }
   critDel(i){ this.admRows('CRIT',this.state.adm.CRIT.filter((_,j)=>j!==i)); }
-  async saveAdmin(){
-    const which=this.state.admTab==='SYNC'?'HOSP':this.state.admTab; let rows=this.state.adm[which].map(r=>r.slice());
+  async saveAdmin(w,auto){
+    const which=w||(['SYNC','ORGS'].includes(this.state.admTab)?'HOSP':this.state.admTab); let rows=this.state.adm[which].map(r=>r.slice());
+    const ver=(this._ver||{})[which]||0;
+    const bad=m=>{ this.setSaveInfo('error',which,m); if(!auto||this._lastErr!==m) this.toast('저장 실패: '+m,true); this._lastErr=m; };
     const nv=v=>{const t=String(v==null?'':v).trim(); return t===''?'':Number(t);};
     if(which==='CRIT'){
       const cnt={};
       rows=rows.map(r=>{const c=String(r[0]).trim(); cnt[c]=(cnt[c]||0)+1; return [c,r[1],cnt[c],String(r[3]),Number(r[4])||0,nv(r[5]),nv(r[6]),r[7]||'이상미만',r[8]||''];});
-      if(rows.some(r=>Number.isNaN(r[5])||Number.isNaN(r[6]))) return this.toast('하한·상한은 숫자로 입력해 주세요.',true);
+      if(rows.some(r=>Number.isNaN(r[5])||Number.isNaN(r[6]))) return bad('하한·상한은 숫자로 입력해 주세요.');
     }
     if(which==='HOSP') rows=rows.map(r=>{r[9]=Number(r[9]); r[10]=Number(r[10]); r[11]=Number(r[11]); const p=nv(r[12]); r[12]=p===''||Number.isNaN(p)?null:p; return r;});
     if(which==='CONF') rows=rows.map(r=>[r[0],NUMCONF.includes(r[0])?Number(r[1]):String(r[1]==null?'':r[1]),r[2]]);
-    this.setState({saving:true});
+    this.setState({saving:true}); this.setSaveInfo('saving',which);
     const r=await this.call('adminSave',which,rows);
     this.setState({saving:false});
-    if(!r.ok) return this.toast('저장 실패: '+r.msg,true);
-    await this.loadAdmin();
+    if(!r.ok) return bad(r.msg);
+    this._lastErr=null;
+    if(((this._ver||{})[which]||0)===ver) this.setState(s=>({dirty:{...s.dirty,[which]:false}}));
+    this.setSaveInfo('saved',which);
+    if(!auto) await this.loadAdmin();
     const b=await this.call('bootstrap'); if(!b.ok) return this.logout();
     let st=this.state.start,en=this.state.end;
     if(this.state.preset!=='custom'){ const p=b.periods[this.state.preset]; st=p.start; en=p.end; }
     this.setState({boot:b,dStart:st,dEnd:en});
     await this.load(st,en);
-    this.toast('저장되었습니다 ('+r.count+'행) · 전체 재계산 완료');
+    if(!auto) this.toast('저장되었습니다 ('+r.count+'행) · 전체 재계산 완료');
+  }
+  usersVM(a,P,codes){
+    const s=this.state, U=a.USERS||[], MU='color-mix(in srgb, var(--color-text) 62%, transparent)', today=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
+    const D=this.DATA||{}, cfg=D.config||{}, hn={}; (D.hospitals||[]).forEach(h=>hn[h.code]=h.name);
+    const list=(k,def)=>String(cfg[k]||def).split(/[,\n]+/).map(x=>x.trim()).filter(Boolean);
+    const DEPTS=list('USER_DEPTS','진료부,간호부,원무과,1병동,2병동,3병동,4병동,5병동'), TITLES=list('USER_TITLES','병원장,진료부장,간호부장,수간호사,수석간호사,병동장,간호사,간호조무사,의사,행정');
+    const Y=v=>String(v||'').toUpperCase()==='Y';
+    const pill=(label,on,pick)=>({label,pick,bd:on?'var(--color-accent)':'var(--color-divider)',bg:on?'var(--color-accent-100)':'transparent',fg:on?'var(--color-accent-800)':MU});
+    const opts=(arr,cur,ph)=>{const o=[{v:'',label:ph}].concat(arr.map(([v,l])=>({v,label:l}))); if(cur&&!o.some(x=>x.v===cur)) o.push({v:cur,label:hn[cur]||cur}); return o;};
+    const hospArr=(P.globalAdmin?[['전체','전 기관']]:[]).concat(codes.filter(c=>P.globalAdmin||P.adminHosps.includes(c)).map(c=>[c,hn[c]||c]));
+    const ROLES=[['user','사용자'],['org','기관 관리자']].concat(P.sys?[['sys','시스템 관리자 (admin)']]:[]);
+    const RDESC={user:'사용자: 소속기관의 현황·기간예측을 조회합니다. (세부 권한에서 현황뷰어 사용을 켜면 목표·약사재직률 편집과 데이터 업로드가 가능합니다.)',org:'기관 관리자: 소속기관의 모든 설정과 사용자 계정·권한을 관리합니다.',sys:'시스템 관리자: 기관에 소속되지 않으며 전 기관·전 기능(기관 관리, 평가기준, 시트연동, 환경설정, 사용자)을 관리합니다. 로그인 화면 [시스템 관리자]에서 사번을 ID로 사용합니다.'};
+    const roleOf=r=>r[2]==='시스템관리자'?'sys':Y(r[17])?'org':'user';
+    const statOf=r=>String(r[4]).toUpperCase()==='N'?'off':(r[18]&&today<String(r[18]))?'rsv':(r[19]&&today>String(r[19]))?'exp':'on';
+    const ST={on:['사용 중','var(--color-accent)','var(--color-accent-800)','var(--color-accent-100)'],rsv:['예약','var(--color-accent-300)','var(--color-accent-800)','transparent'],exp:['만료','var(--bad)','var(--bad)','transparent'],off:['비활성','var(--color-divider)',MU,'transparent']};
+    const segX=(cur,pickFn)=>ROLES.map(([k,l])=>{const on=cur===k; return {label:l,pick:()=>pickFn(k),bg:on?'var(--color-accent)':'transparent',fg:on?'#fff':'var(--color-text)'};});
+    // 신규 등록
+    const nu=s.uNew||{emp:'',name:'',hosp:(hospArr.find(h=>h[0]!=='전체')||hospArr[0]||[''])[0],dept:'',title:'',gmail:'',role:'user',from:'',to:''};
+    const setN=p=>this.setState({uNew:{...nu,...p}});
+    const nuVM={...nu,hospOpts:opts(hospArr,nu.hosp,'소속기관'),deptOpts:opts(DEPTS.map(x=>[x,x]),nu.dept,'부서'),titleOpts:opts(TITLES.map(x=>[x,x]),nu.title,'직책'),hospLock:nu.role==='sys',
+      on_emp:e=>setN({emp:e.target.value.toUpperCase()}),on_name:e=>setN({name:e.target.value}),on_hosp:e=>setN({hosp:e.target.value}),on_dept:e=>setN({dept:e.target.value}),on_title:e=>setN({title:e.target.value}),on_gmail:e=>setN({gmail:e.target.value.trim()}),
+      on_from:e=>setN({from:e.target.value}),on_to:e=>setN({to:e.target.value}),noLimit:pill('기간 제한 없음'+(!nu.from&&!nu.to?' ✓':''),!nu.from&&!nu.to,()=>setN({from:'',to:''})),
+      roles:segX(nu.role,k=>setN({role:k})),roleDesc:RDESC[nu.role],submit:()=>this.uRegister(nu)};
+    // 목록
+    const uq=String(s.uq||'').trim().toLowerCase(), fH=s.fHosp||'', fS=s.fStat||'';
+    const scope=U.map((r,i)=>({i,r})).filter(o=>o.r[2]!=='시스템관리자'||P.sys);
+    const cnt={on:0,rsv:0,exp:0,off:0}; scope.forEach(o=>cnt[statOf(o.r)]++);
+    const shown=scope.filter(o=>!fH||o.r[9]===fH||AQX.parseAccess(o.r[3])[fH]||(fH==='전체'&&o.r[2]==='시스템관리자')).filter(o=>!fS||statOf(o.r)===fS)
+      .filter(o=>!uq||[o.r[1],o.r[7],o.r[8],o.r[10],o.r[11]].some(x=>String(x||'').toLowerCase().includes(uq)));
+    const urows=shown.map(({i,r})=>{
+      const ed=(col,save)=>e=>this.uEdit(i,col,e&&e.target?e.target.value:e,save!==false);
+      const tg=col=>()=>this.uEdit(i,col,Y(r[col])?'N':'Y',true);
+      const role=roleOf(r), st=statOf(r), on=String(r[4]).toUpperCase()!=='N', open=s.uOpen===i, pwo=s.uPwRow===i;
+      const em=String(r[0]||'').toLowerCase(), uo=(D.users||[]).find(u=>String(u.email).toLowerCase()===em)||{};
+      const gm=String(r[8]||'').trim(), org=role==='sys'?'전 기관':[(r[9]==='전체'?'전 기관':hn[r[9]]||r[9]||'–'),r[10],r[11]].filter(Boolean).join(' · ');
+      const ex=[]; if(gm&&!EMAIL_RE.test(gm)) ex.push('Gmail 형식 오류'); else if(gm&&!/@gmail\.com$/i.test(gm)) ex.push('개인 Gmail(@gmail.com) 주소가 아닙니다');
+      if(role!=='sys'&&Object.keys(AQX.parseAccess(r[3])).length>1&&r[9]!=='전체') ex.push('기관별 권한: '+AQX.accessSummary(this.uRowObj(r),codes));
+      const RT={sys:['admin · 전체','var(--color-accent)','#fff','var(--color-accent)'],org:['기관 관리자','var(--color-accent-100)','var(--color-accent-800)','var(--color-accent-300)'],user:['사용자','transparent','var(--color-text)','var(--color-divider)']}[role];
+      return {emp:r[7]||'',name:r[1]||'',last:r[6]||'–',org,gmail:r[8]||'',gmailShow:gm||'Gmail 미등록',gmailFg:gm?'var(--color-text)':MU,
+        roleTag:RT[0],roleBg:RT[1],roleFg:RT[2],roleBd:RT[3],status:ST[st][0],stBd:ST[st][1],stFg:ST[st][2],stBg:ST[st][3],
+        periodTxt:(r[18]||r[19])?(r[18]||'…')+' ~ '+(r[19]||'…'):'제한 없음',
+        on,swBg:on?'var(--color-accent)':'var(--color-neutral-300)',swBd:on?'var(--color-accent-700)':'var(--color-divider)',knob:on?'22px':'2px',toggleAct:e=>{ e&&e.stopPropagation&&e.stopPropagation(); this.uEdit(i,4,on?'N':'Y',true); },
+        bar:open?'var(--color-accent)':'transparent',rowBg:open?'var(--color-accent-100)':'transparent',
+        open,editLabel:open?'닫기':'편집',toggleOpen:e=>{ e&&e.stopPropagation&&e.stopPropagation(); if(open) this.uSave(); this.setState({uOpen:open?null:i,uPwRow:null}); },done:()=>{ this.uSave(); this.setState({uOpen:null,uPwRow:null}); },
+        hosp:r[9]||'',dept:r[10]||'',title:r[11]||'',from:r[18]||'',to:r[19]||'',hospLock:role==='sys',
+        hospOpts:opts(hospArr,r[9],'소속기관'),deptOpts:opts(DEPTS.map(x=>[x,x]),r[10],'부서'),titleOpts:opts(TITLES.map(x=>[x,x]),r[11],'직책'),
+        on_emp:ed(7,false),on_name:ed(1,false),on_gmail:ed(8,false),commit:()=>this.uSave(),key:e=>{if(e.key==='Enter') e.target.blur();},
+        on_hosp:ed(9),on_dept:ed(10),on_title:ed(11),on_from:ed(18),on_to:ed(19),
+        noLimit:pill('기간 제한 없음'+(!r[18]&&!r[19]?' ✓':''),!r[18]&&!r[19],()=>{ this.uEdit(i,18,'',false); this.uEdit(i,19,'',true); }),
+        roles:segX(role,k=>this.uRole(i,k)),roleDesc:RDESC[role],
+        vv:pill('뷰',Y(r[13]),tg(13)),vu:pill('사용',Y(r[14]),tg(14)),av:pill('뷰',Y(r[15]),tg(15)),au:pill('사용',Y(r[16]),tg(16)),
+        detail:()=>this.openSheet(i),del:()=>{ this.uDel(i); this.setState({uOpen:null}); },
+        resetPw:()=>this.uPw(i,'1234',true),openPw:()=>this.setState({uPwRow:pwo?null:i,uPwDraft:''}),pwOpen:pwo,pwDraft:pwo?(s.uPwDraft||''):'',
+        on_pw:e=>this.setState({uPwDraft:e.target.value.replace(/\D/g,'').slice(0,4)}),pwKey:e=>{if(e.key==='Enter') this.uPw(i,s.uPwDraft||'',false);},applyPw:()=>this.uPw(i,s.uPwDraft||'',false),
+        pwStatus:uo.pwReset?'비밀번호 초기화됨 · 다음 로그인 때 변경':uo.pwSetAt?'비밀번호 지정됨':'비밀번호 미설정',extraNote:ex.length?' · '+ex.join(' · '):''};
+    });
+    const hc0=c=>HCOL[c]||'var(--color-accent)', hc=P.adminHosps.includes(s.uHosp)?s.uHosp:P.adminHosps[0];
+    const modeX={uModes:[['list','목록 관리'],['hosp','기관별 멤버']].map(([k,l])=>seg(l,(s.uMode==='hosp'?'hosp':'list')===k,()=>this.setState({uMode:k}))),isListMode:s.uMode!=='hosp',isHospMode:s.uMode==='hosp',
+      hospTabs:P.adminHosps.map(c=>seg(c,c===hc,()=>this.setState({uHosp:c}))),hospColor:hc0(hc),hospCode:hc||'',
+      members:U.map((r,i)=>({i,r})).filter(o=>o.r[2]!=='시스템관리자'&&AQX.parseAccess(o.r[3])[hc]).map(({i,r})=>{const cur=AQX.parseAccess(r[3])[hc]||'';
+        return {name:r[1],emp:r[7]||'',inactive:String(r[4]).toUpperCase()==='N',opts:AQX.LEVELS.map(lv=>seg(AQX.LABEL[lv],cur===lv,()=>{this.setLevel(i,hc,lv); this.uHistPush(r,hc+' 권한 → '+AQX.LABEL[lv]); this.uSave();}))};})};
+    modeX.memberCount=modeX.members.length+'명';
+    const H=(s.uHist||[]).concat((a.logs||[]).filter(l=>/권한|비밀번호|사용자/.test(String(l[3]||''))).map(l=>({at:l[0],who:l[2]||l[1],text:l[3]+(l[4]?' · '+l[4]:'')})));
+    return {...modeX,nu:nuVM,urows,noUsers:!urows.length,uq:s.uq||'',setUq:e=>this.setState({uq:e.target.value}),
+      fHosp:fH,setFHosp:e=>this.setState({fHosp:e.target.value}),fHospOpts:[{v:'',label:'전체 기관'}].concat(hospArr.map(([v,l])=>({v,label:l}))),
+      fStat:fS,setFStat:e=>this.setState({fStat:e.target.value}),fStatOpts:[['','전체 상태'],['on','사용 중'],['rsv','예약'],['exp','만료'],['off','비활성']].map(([v,label])=>({v,label})),
+      statChips:[['on','사용 중'],['rsv','예약'],['exp','만료'],['off','비활성']].map(([k,label])=>({label,n:cnt[k],bd:ST[k][1],fg:ST[k][2]})),
+      shownInfo:urows.length+'명 표시 · 관리 대상 '+scope.length+'명',showHead:(s.vw||window.innerWidth||0)>=1180,
+      hist:H,histCount:H.length,noHist:!H.length,histOpen:!!s.histOpen,histRot:s.histOpen?'rotate(90deg)':'none',histHint:s.histOpen?'접기':'펼쳐서 보기',toggleHist:()=>this.setState(st=>({histOpen:!st.histOpen}))};
+  }
+  uRole(i,k){
+    const codes=this.state.adm.hospCodes, rows=this.state.adm.USERS.map(r=>r.slice()), r=rows[i], before=r[2]==='시스템관리자'?'시스템 관리자':String(r[17]).toUpperCase()==='Y'?'기관 관리자':'사용자';
+    if(k==='sys'){ r[2]='시스템관리자'; r[3]=''; r[17]='N'; r[9]='전체'; }
+    else { if(r[2]==='시스템관리자'&&!r[9]) r[9]=''; r[2]='사용자'; r[17]=k==='org'?'Y':'N'; r[13]='Y'; if(r[9]==='전체'&&!this.state.adm.perm.globalAdmin) r[9]=''; r[3]=AQX.deriveAccess(this.uRowObj(r),codes); }
+    const after={sys:'시스템 관리자',org:'기관 관리자',user:'사용자'}[k];
+    if(before!==after) this.uHistPush(r,'권한 '+before+' → '+after);
+    this.setState(st=>({adm:{...st.adm,USERS:rows}})); this.uSave();
+  }
+  uRegister(n){
+    const emp=String(n.emp||'').trim().toUpperCase(), name=String(n.name||'').trim(), gm=String(n.gmail||'').trim().toLowerCase();
+    if(!emp||!name) return this.toast('사번과 이름을 입력해 주세요.',true);
+    if(n.role!=='sys'&&!n.hosp) return this.toast('소속기관을 선택해 주세요.',true);
+    if(gm&&!EMAIL_RE.test(gm)) return this.toast('Gmail 주소 형식을 확인해 주세요.',true);
+    const rows=this.state.adm.USERS;
+    if(rows.some(r=>String(r[7]||'').toUpperCase()===emp)) return this.toast('이미 등록된 사번입니다: '+emp,true);
+    if(gm&&rows.some(r=>String(r[8]||'').toLowerCase()===gm)) return this.toast('이미 등록된 Gmail입니다: '+gm,true);
+    if(n.from&&n.to&&n.from>n.to) return this.toast('유효기간 시작일이 종료일보다 늦습니다.',true);
+    const sys=n.role==='sys';
+    const row=[emp.toLowerCase()+'@aq.local',name,sys?'시스템관리자':'사용자','','Y','','',emp,gm,sys?'전체':n.hosp,n.dept||'',n.title||'','Y','Y','N','Y','N',n.role==='org'?'Y':'N',n.from||'',n.to||''];
+    if(!sys) row[3]=AQX.deriveAccess(this.uRowObj(row),this.state.adm.hospCodes);
+    this.uHistPush(row,'신규 등록 ('+({sys:'시스템 관리자',org:'기관 관리자',user:'사용자'}[n.role])+')');
+    this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.concat([row])},uNew:null}),()=>this.uSave());
+    this.toast(name+' 등록됨 · 목록의 [편집]에서 비밀번호를 지정하세요');
+  }
+  uRowObj(r){ const o={}; AQX.UHEAD.forEach((k,i)=>o[k]=r[i]); return o; }
+  uEdit(i,col,val,save){
+    const UL={1:'이름',4:'계정',7:'사번',8:'로그인 Gmail',9:'소속기관',10:'부서',11:'직책',12:'알림 수신',13:'현황뷰어 뷰',14:'현황뷰어 사용',15:'알림 뷰',16:'알림 사용',17:'기관 관리자',18:'유효기간 시작',19:'유효기간 종료'};
+    const fmt=(c,v)=>c===4?(String(v).toUpperCase()==='N'?'정지':'활성'):(c>=12&&c<=17)?(String(v).toUpperCase()==='Y'?'켬':'끔'):(v||'없음');
+    const codes=this.state.adm.hospCodes, rows=this.state.adm.USERS.map(r=>r.slice()), r=rows[i], old=r[col];
+    if(col===7) val=String(val).toUpperCase();
+    r[col]=val;
+    if(col===14&&val==='Y') r[13]='Y'; if(col===13&&val==='N') r[14]='N';
+    if(col===16&&val==='Y') r[15]='Y'; if(col===15&&val==='N') r[16]='N';
+    if(col===17&&val==='Y') r[13]='Y';
+    if([9,13,14,17].includes(col)&&r[2]!=='시스템관리자') r[3]=AQX.deriveAccess(this.uRowObj(r),codes);
+    this._uTouched=this._uTouched||{};
+    if(!save){ const k=i+':'+col; if(!(k in this._uTouched)) this._uTouched[k]={i,col,old}; }
+    else if(String(old||'')!==String(val||'')) this.uHistPush(r,UL[col]+' '+fmt(col,old)+' → '+fmt(col,val));
+    this.setState(st=>({adm:{...st.adm,USERS:rows}}));
+    if(save) this.uSave();
+  }
+  uHistPush(r,text){ this._uPend=this._uPend||[]; this._uPend.push({who:(this.state.boot&&this.state.boot.user.name)||'',text:(r[1]||r[7]||'새 사용자')+': '+text}); }
+  uSave(){
+    const t=this._uTouched||{}; this._uTouched={};
+    const UL={1:'이름',7:'사번',8:'로그인 Gmail'}, rows=this.state.adm.USERS;
+    Object.values(t).forEach(({i,col,old})=>{ const r=rows[i]; if(r&&String(old||'')!==String(r[col]||'')) this.uHistPush(r,UL[col]+' '+(old||'없음')+' → '+(r[col]||'없음')); });
+    clearTimeout(this._uT); this._uT=setTimeout(()=>this.uSaveNow(),250);
+  }
+  async uSaveNow(){
+    const codes=this.state.adm.hospCodes, rows=this.state.adm.USERS.map(r=>r.slice());
+    const emps={}, gms={}; for(const r of rows){ const e=String(r[7]||'').trim().toUpperCase(), g=String(r[8]||'').trim().toLowerCase(); if(e){ if(emps[e]) return this.toast('중복 사번: '+e+' — 저장하지 않았습니다',true); emps[e]=1; } if(g){ if(gms[g]) return this.toast('같은 로그인 Gmail이 두 계정에 있습니다: '+g+' — 저장하지 않았습니다',true); gms[g]=1; } }
+    rows.forEach(r=>{ if(!r[0]&&String(r[7]||'').trim()&&String(r[1]||'').trim()) r[0]=String(r[7]).trim().toLowerCase()+'@aq.local'; if(r[2]!=='시스템관리자'&&!r[3]) r[3]=AQX.deriveAccess(this.uRowObj(r),codes); });
+    const send=rows.filter(r=>r[0]);
+    if(send.some(r=>r[2]!=='시스템관리자'&&!r[3])){ /* 권한 없는 사용자도 저장 허용: 로그인만 차단됨 */ }
+    this.setState(st=>({adm:{...st.adm,USERS:rows},uSaving:true})); this.setSaveInfo('saving','USERS');
+    const res=await this.call('adminSave','USERS',send);
+    const now=new Date(Date.now()+9*3600000).toISOString().slice(0,16).replace('T',' ');
+    if(!res.ok){ this.setState({uSaving:false}); this.setSaveInfo('error','USERS',res.msg); return this.toast('저장 실패: '+res.msg,true); }
+    this.setSaveInfo('saved','USERS');
+    const pend=(this._uPend||[]).map(h=>({...h,at:now})); this._uPend=[];
+    this.setState(st=>({uSaving:false,dirty:{...st.dirty,USERS:false},uSavedAt:now.slice(11),uHist:pend.reverse().concat(st.uHist||[])}));
+  }
+  uAdd(hospArr){
+    const hc=(hospArr.find(h=>h[0]!=='전체')||hospArr[0]||[''])[0];
+    const row=['','','사용자','','Y','','','','',hc,'','','Y','Y','N','Y','N','N','',''];
+    this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.concat([row])}}));
+    this.toast('맨 아래에 새 줄이 추가되었습니다. 사번·이름을 입력하면 저장됩니다.');
+  }
+  uDel(i){
+    const r=this.state.adm.USERS[i]; if(!r) return;
+    if(!window.confirm((r[1]||r[7]||'이 사용자')+' 계정을 삭제할까요? 되돌릴 수 없습니다.')) return;
+    this.uHistPush(r,'계정 삭제');
+    this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.filter((_,j)=>j!==i)}}),()=>{ if(r[0]) this.uSave(); });
+  }
+  async uPw(i,pw,reset){
+    const r=this.state.adm.USERS[i]; if(!r) return;
+    if(!r[0]) return this.toast('사번·이름을 먼저 입력해 저장하세요.',true);
+    pw=String(pw||'').trim(); if(!/^\d{4}$/.test(pw)) return this.toast('비밀번호는 숫자 4자리로 입력해 주세요 (예: 1234).',true);
+    if(reset&&!window.confirm((r[1]||r[7])+' 비밀번호를 1234로 초기화할까요?')) return;
+    const res=await this.call('adminSetPassword',r[0],pw);
+    if(!res.ok) return this.toast(res.msg||res.message||'비밀번호 변경 실패',true);
+    this.uHistPush(r,reset?'비밀번호 초기화 (1234)':'비밀번호 지정');
+    const now=new Date(Date.now()+9*3600000).toISOString().slice(0,16).replace('T',' '), pend=(this._uPend||[]).map(h=>({...h,at:now})); this._uPend=[];
+    this.setState(st=>({uPwRow:null,uPwDraft:'',uHist:pend.reverse().concat(st.uHist||[])}));
+    this.toast(reset?'비밀번호를 1234로 초기화했습니다. 다음 로그인 때 변경해야 합니다.':'비밀번호를 지정했습니다. 다음 로그인 때 변경해야 합니다.');
   }
   openSheet(i,code){ const draft=i<0?['','','사용자',code?code+':view':'','Y','','','']:this.state.adm.USERS[i].slice(); this.setState({sheet:{i,draft,err:''}}); }
+  async adminSetPw(email,pw,temp){
+    const up=p=>this.setState(st=>({sheet:st.sheet?{...st.sheet,...p}:null}));
+    pw=String(pw||'').trim();
+    if(temp) pw=String(Math.floor(Math.random()*10000)).padStart(4,'0');
+    if(!/^\d{4}$/.test(pw)) return up({err:'비밀번호는 숫자 4자리로 입력해 주세요 (예: 1234).'});
+    up({pwBusy:true,err:'',pwMsg:'',pwTemp:''});
+    const r=await this.call('adminSetPassword',email,pw);
+    if(!r.ok) return up({pwBusy:false,err:r.msg||r.message});
+    up({pwBusy:false,pwDraft:'',pwMsg:temp?'임시 비밀번호가 발급되었습니다. 이 창을 닫으면 다시 볼 수 없으니 사용자에게 전달해 주세요.':'비밀번호를 지정했습니다. 사용자에게 전달해 주세요.',pwTemp:temp?pw:''});
+    this.toast(temp?'임시 비밀번호로 초기화했습니다':'비밀번호를 지정했습니다');
+  }
   sheetSet(col,val){ this.setState(s=>{const d=s.sheet.draft.slice(); d[col]=val; return {sheet:{...s.sheet,draft:d,err:''}};}); }
   sheetApply(){
     const s=this.state.sheet, d=s.draft.slice(); d[0]=String(d[0]||'').trim();
@@ -1490,22 +1905,29 @@ class Component extends DCLogic {
     if(d[7]&&rows.some((r,j)=>j!==s.i&&String(r[7]||'').toUpperCase()===d[7])) return bad('이미 사용 중인 사번입니다.');
     if(d[2]!=='시스템관리자'&&!Object.keys(AQX.parseAccess(d[3])).length) return bad('한 개 이상 기관에 권한을 지정해 주세요.');
     if(s.i<0) rows.push(d); else rows[s.i]=d;
-    this.admRows('USERS',rows); this.setState({sheet:null});
+    this.admRows('USERS',rows); this.setState({sheet:null}); this.uHistPush(d,s.i<0?'사용자 추가':'상세 편집'); this.uSave();
   }
-  sheetDel(){ const i=this.state.sheet.i; this.admRows('USERS',this.state.adm.USERS.filter((_,j)=>j!==i)); this.setState({sheet:null}); }
+  sheetDel(){ const i=this.state.sheet.i, r=this.state.adm.USERS[i]; this.admRows('USERS',this.state.adm.USERS.filter((_,j)=>j!==i)); this.setState({sheet:null}); if(r) this.uHistPush(r,'계정 삭제'); this.uSave(); }
 
   spinner(){ return React.createElement('span',{style:{width:16,height:16,border:'2px solid var(--color-divider)',borderTopColor:'var(--color-accent)',borderRadius:'50%',display:'inline-block',animation:'aqspin .8s linear infinite',flex:'none'}}); }
 
   loginVM(){
     const L=this.state.login;
     const mode=L.mode||'emp', isE=L.step==='email';
-    const modes=[['emp','사번'],['gmail','Gmail']].map(([k,label])=>{const on=mode===k; return {label,on,bg:on?'var(--aq-card)':'transparent',bd:on?'var(--aq-line)':'transparent',sh:on?'var(--shadow-sm)':'none',pick:()=>this.setLogin({mode:k,err:''})};});
-    return {modes,emp:L.emp||'',onEmp:e=>this.setLogin({emp:e.target.value.toUpperCase(),err:''}),isEmpForm:isE&&mode==='emp',isGmailForm:isE&&mode==='gmail',google:()=>this.google(),
+    const modes=[['emp','사번'],['gmail','Gmail'],['sys','시스템 관리자']].map(([k,label])=>{const on=mode===k; return {label,on,isEmp:k==='emp',isGmail:k==='gmail',isSys:k==='sys',bg:on?'var(--color-accent-100)':'var(--aq-btn-s-bg)',bd:on?'var(--color-accent)':'var(--aq-btn-s-bd)',fg:on?'var(--color-accent-800)':'var(--color-text)',sh:on?'inset 0 0 0 1px var(--color-accent)':'var(--aq-btn-s)',pick:()=>this.setLogin({mode:k,err:'',reset:false,pw:''})};});
+    const idv=mode==='gmail'?(L.email||''):mode==='sys'?(L.sysId||''):(L.emp||'');
+    return {modes,isSysMode:mode==='sys',isMain:isE&&!L.reset,isReset:isE&&!!L.reset&&mode!=='sys',canReset:mode!=='sys',resetLabel:mode==='gmail'?'Gmail 주소':'사번',idLabel:mode==='gmail'?'Gmail 주소':mode==='sys'?'시스템 관리자 ID':'사번',idPh:mode==='gmail'?'name@gmail.com':mode==='sys'?'admin':'예: 1111',idType:mode==='gmail'?'email':'text',idVal:idv,
+      onId:e=>{const v=e.target.value; this.setLogin(mode==='gmail'?{email:v,err:''}:mode==='sys'?{sysId:v,err:''}:{emp:v.toUpperCase(),err:''});},
+      pwType:L.eye?'text':'password',eyeOpen:!!L.eye,eyeClosed:!L.eye,eyeLabel:L.eye?'비밀번호 숨기기':'비밀번호 보기',toggleEye:()=>this.setLogin({eye:!L.eye}),
+      emp:L.emp||'',onEmp:e=>this.setLogin({emp:e.target.value.toUpperCase(),err:''}),isPwForm:isE&&mode==='emp'&&!L.reset,isEmpForm:isE&&mode==='emp'&&!!L.reset,
+      pw:L.pw||'',onPw:e=>this.setLogin({pw:e.target.value.replace(/\D/g,'').slice(0,4),err:''}),onPwKey:e=>{if(e.key==='Enter') this.pwLogin();},pwLogin:()=>this.pwLogin(),loginLabel:L.busy?'확인 중…':'로그인',
+      startReset:()=>this.setLogin({reset:true,err:'',pw:''}),showDemoPw:!this.live,
+      isSetPw:L.step==='setpw',np1:L.np1||'',np2:L.np2||'',onNp1:e=>this.setLogin({np1:e.target.value.replace(/\D/g,'').slice(0,4),err:''}),onNp2:e=>this.setLogin({np2:e.target.value.replace(/\D/g,'').slice(0,4),err:''}),onNpKey:e=>{if(e.key==='Enter') this.savePw();},savePw:()=>this.savePw(),isGmailForm:isE&&mode==='gmail'&&!!L.reset,isGmailPw:isE&&mode==='gmail'&&!L.reset,google:()=>this.google(),
       shownEmail:mode==='emp'?AQX.maskEmail(L.email):L.email,
       email:L.email,code:L.code,err:L.err,hasErr:!!L.err,info:L.info,hasInfo:!!L.info,isEmail:L.step==='email',isCode:L.step==='code',busy:L.busy,sendLabel:L.busy?'발송 중…':'인증코드 받기',
       onEmail:e=>this.setLogin({email:e.target.value,err:''}),onCode:e=>this.setLogin({code:e.target.value.replace(/\D/g,'').slice(0,6),err:''}),
       onEmailKey:e=>{if(e.key==='Enter') this.requestCode();},onCodeKey:e=>{if(e.key==='Enter') this.verify();},
-      request:()=>this.requestCode(),verify:()=>this.verify(),back:()=>this.setLogin({step:'email',code:'',err:'',info:'',tries:0}),
+      request:()=>this.requestCode(),verify:()=>this.verify(),back:()=>this.setLogin({step:'email',code:'',err:'',info:'',tries:0,reset:false}),
       showDemo:!this.live&&this.props.showDemo!==false,
       codeLabel:this.live?'인증코드 6자리':'인증코드 6자리 (데모: 아무 숫자 6자리)',
       demo:(this.DATA&&window.AQX?this.DATA.users:[]).map(u=>({name:u.name,email:u.email,emp:u.empNo||'사번없음',role:AQX.roleLabel(u,this.DATA.hospitals.map(h=>h.code)),scope:AQX.accessSummary(u,this.DATA.hospitals.map(h=>h.code)),inactive:String(u.active).toUpperCase()==='N',pick:()=>this.demoLogin(u.email)}))};
@@ -1556,7 +1978,11 @@ class Component extends DCLogic {
     const W=t.wards||[]; let sp=0,sr=0,sa=0; W.forEach(w=>{sp+=w.pat||0; sr+=w.rn; sa+=w.an;});
     return {level:AQX.LONG[h.level||''],name:h.name,date:t.date,pat:fx(t.pat,0),patDate:md(t.patDate),tiles,score:this.scoreVM(t,sec,h,d,'당일 기준'),grades,hasGrades:grades.length>0,rnNote:t.rnShareNote,hasRnNote:!!t.rnShareNote,
       wards:W.map(w=>({ward:w.ward,merged:!!w.merged,pat:w.pat==null?'–':fx(w.pat,0),rn:fx(w.rn,0),an:fx(w.an,0),nurse:fx(w.nurse,0),ratio:w.nurseRatio==null?'–':fx(w.nurseRatio,2)})),
-      hasWards:W.length>0,wTot:{pat:fx(sp,0),rn:fx(sr,0),an:fx(sa,0),nurse:fx(sr+sa,0),ratio:sr+sa?fx(sp/(sr+sa),2):'–'},wardDate:md(t.wardDataDate),todo:this.todoVM(h)};
+      hasWards:W.length>0,wTot:{pat:fx(sp,0),rn:fx(sr,0),an:fx(sa,0),nurse:fx(sr+sa,0),ratio:sr+sa?fx(sp/(sr+sa),2):'–'},wardDate:md(t.wardDataDate),todo:this.todoVM(h),
+      ...(()=>{ const td=t.date, src=[['근무표 간호',t.staffDate,h.sections.nurse],['근무표 의사',t.docDate,h.sections.doctor],['재원환자',t.patDate,true]].filter(x=>x[2]);
+        const srcDates=src.map(([label,dt])=>{const ok=dt===td; return {label,date:dt?md(dt):'없음',bd:ok?'var(--color-divider)':'var(--bad)',fg:ok?'color-mix(in srgb, var(--color-text) 62%, transparent)':'var(--bad)'};});
+        const stale=src.filter(([l,dt])=>l.startsWith('근무표')&&dt!==td);
+        return {srcDates,hasStaleWarn:stale.length>0,staleWarn:'오늘('+md(td)+') 근무표 DB 데이터가 없습니다. '+stale.map(([l,dt])=>l.replace('근무표 ','')+'인력은 '+(dt?md(dt)+' 값으로':'값 없이')).join(', ')+' 계산했습니다. 구글시트 근무표 DB에 오늘 날짜 행이 있는지 확인하세요.'}; })()};
   }
   chartVM(id,title,dates,series,bound){
     const W=340,H=180,L=36,R=8,T=16,B=24,n=dates.length,all=[];
@@ -1650,11 +2076,33 @@ class Component extends DCLogic {
   }
   settingsVM(){
     const s=this.state,a=s.adm,tab=s.admTab;
-    const out={sub:SUBTABS.filter(([k])=>!a||a.avail.includes(k)).map(([k,l])=>seg(l,tab===k,()=>this.setState({admTab:k,sheet:null}))),desc:SUBDESC[tab],notLoaded:!a,
+    const grp=TABGROUP[s.tab]||TABGROUP.settings;
+    const out={isORGS:!!a&&tab==='ORGS',sub:SUBTABS.filter(([k])=>grp.includes(k)&&(!a||a.avail.includes(k))).map(([k,l])=>seg(l,tab===k,()=>this.setState({admTab:k,sheet:null}))),desc:SUBDESC[tab],notLoaded:!a,
       isCRIT:!!a&&tab==='CRIT',isHOSP:!!a&&tab==='HOSP',isCONF:!!a&&tab==='CONF',isUSERS:!!a&&tab==='USERS',isLOGS:!!a&&tab==='LOGS',isSYNC:!!a&&tab==='SYNC',
-      dirty:!!(a&&s.dirty[tab==='SYNC'?'HOSP':tab]),save:()=>this.saveAdmin(),revert:()=>this.loadAdmin(),saving:s.saving,saveLabel:s.saving?'저장 중…':'저장',sheetOpen:false,sh:{}};
+      dirty:!!(a&&s.dirty[['SYNC','ORGS'].includes(tab)?'HOSP':tab]),save:()=>{ const si=s.saveInfo||{}; this.saveAdmin(si.which&&si.which!=='USERS'?si.which:null,false); },
+      ...(()=>{ const si=s.saveInfo, NM={CRIT:'평가기준',HOSP:'기관 설정',CONF:'환경설정',USERS:'사용자 계정'};
+        if(!si||!a) return {showSaveBar:false};
+        const n=NM[si.which]||'설정';
+        const M={pending:[n+' 변경 감지 · 잠시 후 서버에 자동저장합니다…','var(--color-accent-300)','var(--color-text)'],saving:[n+' 서버에 저장 중…','var(--color-accent)','var(--color-text)'],
+          saved:['✓ '+n+' 서버에 자동저장됨 · '+si.at+' · 모든 사용자에게 같은 값이 적용됩니다','var(--good)','var(--color-text)'],error:['저장 실패 ('+n+') · '+si.msg+' — 고친 뒤 다시 저장하세요','var(--bad)','var(--bad)']}[si.state]||['','transparent',''];
+        return {showSaveBar:true,saveMsg:M[0],saveDot:M[1],saveFg:M[2],saveRetry:si.state==='error'&&si.which!=='USERS'}; })(),revert:()=>this.loadAdmin(),saving:s.saving,saveLabel:s.saving?'저장 중…':'저장',sheetOpen:false,sh:{}};
     if(!a) return out;
     const P=a.perm,codes=a.hospCodes,LV=AQX.LEVELS;
+    if(tab==='ORGS'){
+      const HR=a.HOSP||[], cnt=c=>(a.USERS||[]).filter(r=>r[2]!=='시스템관리자'&&AQX.parseAccess(r[3])[c]).length;
+      out.orgs=HR.map((r,i)=>{const lock=!P.sys&&(P.levels||{})[r[0]]!=='admin', on=String(r[13]||'Y').toUpperCase()!=='N';
+        return {code:r[0],name:r[1]||'',color:HCOL[r[0]]||'var(--color-accent)',isNew:!codes.includes(r[0]),lock,members:a.USERS?cnt(r[0])+'명':'–',
+          setName:e=>this.admSet('HOSP',i,1,e.target.value),act:[['Y','사용'],['N','중지']].map(([v,l])=>seg(l,(on?'Y':'N')===v,()=>this.admSet('HOSP',i,13,v)))};});
+      const no=s.newOrg||{code:'',name:''};
+      out.canAddOrg=!!P.sys;
+      out.newOrg={code:no.code,name:no.name,setCode:e=>this.setState({newOrg:{...no,code:e.target.value.trim()}}),setName:e=>this.setState({newOrg:{...no,name:e.target.value}}),
+        key:e=>{if(e.key==='Enter') out.newOrg.add();},
+        add:()=>{ const c=String(no.code||'').trim(), n=String(no.name||'').trim();
+          if(!c||!n) return this.toast('기관코드와 기관명을 입력해 주세요.',true);
+          if(HR.some(r=>String(r[0])===c)) return this.toast('이미 있는 기관코드입니다: '+c,true);
+          const row=AQX.HHEAD.map(k=>k==='code'?c:k==='name'?n:k==='active'?'Y':k==='patDateCol'?'B':k==='patValCol'?'C':'');
+          this.admRows('HOSP',HR.concat([row])); this.setState({newOrg:{code:'',name:''}}); this.toast(c+' 추가됨 · 서버에 자동저장합니다'); }};
+    }
     const rows=a.CRIT||[];
     out.groups=CRIT_CODES.map(code=>{
       const ix=[]; rows.forEach((r,i)=>{if(String(r[0]).trim()===code) ix.push(i);});
@@ -1727,28 +2175,7 @@ class Component extends DCLogic {
         an:['AN','AN2','AN3'].map(c=>({c,on:list.includes(c),toggle:()=>{const nl=['AN','AN2','AN3'].filter(x=>x===c?!list.includes(c):list.includes(x)); this.admSet('CONF',i,1,nl.join(','));}}))};
     });
     const U=a.USERS||[], hc0=c=>HCOL[c]||'var(--color-accent)';
-    out.uModes=[['user','사용자별'],['hosp','기관별']].map(([k,l])=>seg(l,(s.uMode||'user')===k,()=>this.setState({uMode:k})));
-    out.isUserMode=s.uMode!=='hosp'; out.isHospMode=s.uMode==='hosp';
-    const uf=s.uFilter;
-    out.uFilters=['전체',...codes.filter(c=>P.adminHosps.includes(c))].map(x=>seg(x,uf===x,()=>this.setState({uFilter:x})));
-    const uq=String(s.uq||'').trim().toLowerCase();
-    const LVS={admin:['var(--color-accent)','var(--color-accent)','#fff'],manage:['var(--color-accent-300)','var(--color-accent-100)','var(--color-accent-800)'],view:['var(--color-divider)','transparent','var(--color-text)'],'':['transparent','transparent','color-mix(in srgb, var(--color-text) 35%, transparent)']};
-    out.uq=s.uq||''; out.setUq=e=>this.setState({uq:e.target.value});
-    out.uCodes=codes.map(c=>({code:c,color:hc0(c)}));
-    out.users=U.map((r,i)=>({i,r})).filter(o=>uf==='전체'||o.r[2]==='시스템관리자'||AQX.parseAccess(o.r[3])[uf]).filter(o=>!uq||[o.r[0],o.r[1],o.r[7]].some(x=>String(x||'').toLowerCase().includes(uq))).map(({i,r})=>{
-      const acc=AQX.parseAccess(r[3]),sys=r[2]==='시스템관리자',off=String(r[4]).toUpperCase()==='N';
-      return {name:r[1],email:r[0],emp:r[7]||'–',kind:sys?'시스템관리자':'사용자',status:off?'사용중지':'사용',stFg:off?'var(--bad)':'var(--color-text)',
-        lv:codes.map(c=>{const k=sys?'admin':(acc[c]||''),[bd,bg,fg]=LVS[k]; return {label:k?AQX.LABEL[k]:'–',bd,bg,fg};}),
-        isSys:sys,inactive:off,last:r[6]||'–',open:e=>{if(e&&e.stopPropagation) e.stopPropagation(); this.openSheet(i);},
-        chips:sys?[{label:'시스템관리자 · 전 기관 admin',color:'var(--color-accent)'}]:codes.filter(c=>acc[c]).map(c=>({label:c+' '+AQX.LABEL[acc[c]],color:hc0(c)}))};});
-    const hc=P.adminHosps.includes(s.uHosp)?s.uHosp:P.adminHosps[0];
-    out.hospTabs=P.adminHosps.map(c=>seg(c,c===hc,()=>this.setState({uHosp:c})));
-    out.hospColor=hc0(hc); out.hospCode=hc||'';
-    out.members=U.map((r,i)=>({i,r})).filter(o=>o.r[2]!=='시스템관리자'&&AQX.parseAccess(o.r[3])[hc]).map(({i,r})=>{const cur=AQX.parseAccess(r[3])[hc]||'';
-      return {name:r[1],email:r[0],inactive:String(r[4]).toUpperCase()==='N',opts:LV.map(lv=>seg(AQX.LABEL[lv],cur===lv,()=>this.setLevel(i,hc,lv)))};});
-    out.memberCount=out.members.length+'명'; out.userCount=out.users.length+'명'; out.noUsers=!out.users.length;
-    out.addMember=()=>this.openSheet(-1,hc);
-    out.addUser=()=>this.openSheet(-1);
+    Object.assign(out,this.usersVM(a,P,codes));
     out.logs=a.logs.map(l=>({time:l[0],email:l[1],name:l[2],act:l[3],detail:l[4]}));
     const sh=s.sheet; out.sheetOpen=!!sh;
     if(sh){
@@ -1758,6 +2185,11 @@ class Component extends DCLogic {
         canRole:P.sys,roles:['사용자','시스템관리자'].map(x=>seg(x,dr[2]===x,()=>this.sheetSet(2,x))),isSys:sys,notSys:!sys,
         matrix:codes.map(c=>{const cur=acc[c]||'',ed=P.adminHosps.includes(c); return {code:c,color:hc0(c),canEdit:ed,readOnly:!ed,cur:AQX.LONG[cur],opts:LV.map(lv=>seg(AQX.LABEL[lv],cur===lv,()=>this.sheetLevel(c,lv)))};}),
         canActive:P.globalAdmin,active:['Y','N'].map(x=>seg(x==='Y'?'사용':'중지',String(dr[4]||'Y').toUpperCase()===x,()=>this.sheetSet(4,x))),
+        ...(()=>{ const saved=sh.i>=0&&!!(a.USERS[sh.i]&&!this.state.dirty.USERS), em=String(dr[0]||'').toLowerCase(), uo=(this.DATA&&this.DATA.users||[]).find(u=>String(u.email).toLowerCase()===em)||{};
+          const tAcc=AQX.parseAccess(dr[3]), can=P.sys||(!sys&&P.adminHosps.some(c=>tAcc[c]));
+          return {canPw:saved&&can,pwNeedSave:!saved&&can,pwDraft:sh.pwDraft||'',setPwDraft:e=>this.setState(st=>({sheet:{...st.sheet,pwDraft:e.target.value.replace(/\D/g,'').slice(0,4),err:''}})),pwBusy:!!sh.pwBusy,
+            pwStatus:uo.pwReset?'초기화됨 · 다음 로그인 때 변경 필요':uo.pwSetAt?'설정됨 · '+uo.pwSetAt:'미설정 (처음 로그인 때 직접 설정)',
+            setPw:()=>this.adminSetPw(em,sh.pwDraft,false),resetPw:()=>this.adminSetPw(em,'',true),pwMsg:sh.pwMsg||'',hasPwMsg:!!sh.pwMsg,pwTemp:sh.pwTemp||'',hasTemp:!!sh.pwTemp}; })(),
         err:sh.err,hasErr:!!sh.err,close:()=>this.setState({sheet:null}),stop:e=>e.stopPropagation(),apply:()=>this.sheetApply(),del:()=>this.sheetDel()};
     }
     return out;
@@ -1771,9 +2203,11 @@ class Component extends DCLogic {
       toast:s.toast,hasToast:!!s.toast,toastBg:s.toastBad?'var(--bad)':'var(--color-text)',spinner:this.spinner(),
       isLogin:s.ready&&!b,isApp:s.ready&&!!b,L:this.loginVM()};
     const EC=this.cfg||window.AQ_CONFIG||{}; v.isDevEnv=EC.env==='dev'; v.envVer=EC.version||'';
-    const vw=s.vw||window.innerWidth||400, wide=vw>=1024, two=wide;
+    const vw=s.vw||window.innerWidth||400, vf=this.props.view||'auto';
+    const isPhone=/Android.+Mobile|iPhone|iPod|Mobile Safari|Windows Phone/i.test(navigator.userAgent)||(window.matchMedia&&matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<600);
+    const wide=vf==='pc'?true:vf==='mobile'?false:!isPhone, two=wide&&vw>=900;
     Object.assign(v,{wide,narrow:!wide,F:'1 / -1',
-      COLS:two?'repeat(2,minmax(0,1fr))':'minmax(0,1fr)',C3:vw>=1280?'repeat(3,minmax(0,1fr))':two?'repeat(2,minmax(0,1fr))':'minmax(0,1fr)',
+      COLS:two?'repeat(2,minmax(0,1fr))':'minmax(0,1fr)',C3:wide&&vw>=1280?'repeat(3,minmax(0,1fr))':two?'repeat(2,minmax(0,1fr))':'minmax(0,1fr)',
       GAP:wide?'20px':'16px',MAXW:wide?'1320px':'760px',PAD:wide?'28px 32px 96px':'16px 14px calc(120px + env(safe-area-inset-bottom))',
       SBL:wide?'248px':'0',SBB:wide?'0':'calc(61px + env(safe-area-inset-bottom))',TB:wide?'32px':'calc(140px + env(safe-area-inset-bottom))',
       SHA:wide?'center':'flex-end',SHP:wide?'24px':'0',SHW:wide?'560px':'760px'});
@@ -1782,16 +2216,21 @@ class Component extends DCLogic {
     Object.assign(v,{title:b.title,userName:b.user.name,userRole:b.roleLabel,logout:()=>this.logout(),hasCombined:perm.combined,hasSettings:perm.settings,hasUpload:!!(perm.uploadHosps&&perm.uploadHosps.length),loading:s.loading});
     v.go={}; v.tabFg={}; v.tabBd={};
     v.sideBg={}; v.sideFg={};
-    ['today','period','combined','upload','settings'].forEach(t=>{v.go[t]=()=>this.goTab(t); v.tabFg[t]=s.tab===t?'var(--color-accent)':MUTED; v.tabBd[t]=s.tab===t?'var(--color-accent)':'transparent';
+    v.hasManage=!!(perm.sys||(perm.adminHosps&&perm.adminHosps.length));
+    v.manageSub=[['ORGS','기관 관리'],['USERS','사용자 계정 관리'],['LOGS','접속로그']].filter(([k])=>k!=='ORGS'||perm.sys).map(([k,label])=>{const on=s.tab==='manage'&&s.admTab===k;
+      return {label,bg:on?'var(--color-accent-100)':'transparent',fg:on?'var(--color-accent-800)':'var(--color-text)',fw:on?'700':'400',pick:()=>this.goManage(k)};});
+    ['today','period','combined','upload','settings','manage'].forEach(t=>{v.go[t]=()=>this.goTab(t); v.tabFg[t]=s.tab===t?'var(--color-accent)':MUTED; v.tabBd[t]=s.tab===t?'var(--color-accent)':'transparent';
       v.sideBg[t]=s.tab===t?'var(--color-accent-100)':'transparent'; v.sideFg[t]=s.tab===t?'var(--color-accent-800)':'var(--color-text)';});
     v.userInitial=String(b.user.name||'?').slice(0,1);
-    v.pageTitle={today:'현황',period:'기간예측',combined:'3개 기관 종합',upload:'데이터 업로드',settings:'기준설정'}[s.tab];
-    v.pageMeta=s.tab==='settings'||s.tab==='upload'?'':s.tab==='today'?'기준일 '+(d?d.today:''):(d?d.start+' ~ '+d.end:'');
+    v.pageTitle={today:'현황',period:'기간예측',combined:'3개 기관 종합',upload:'데이터 업로드',settings:'기준설정',manage:'관리'}[s.tab];
+    v.pageMeta=s.tab==='settings'||s.tab==='manage'||s.tab==='upload'?'':s.tab==='today'?'기준일 '+(d?d.today:''):(d?d.start+' ~ '+d.end:'');
     const hs=d?d.hospitals:[],h=hs[s.hosp];
-    v.isToday=!!h&&s.tab==='today'; v.isPeriod=!!h&&s.tab==='period'; v.isCombined=!!d&&s.tab==='combined'&&!!d.combined; v.isSettings=s.tab==='settings'&&perm.settings; v.isUpload=s.tab==='upload'&&v.hasUpload; if(v.isUpload) v.U=this.upVM();
+    if(!wide){ v.hasSettings=false; v.hasUpload=false; v.hasManage=false;
+      if((s.tab==='settings'||s.tab==='manage'||s.tab==='upload')&&!this._mobFix){ this._mobFix=true; setTimeout(()=>{this._mobFix=false; this.setState({tab:'today'});},0); } }
+    v.isToday=!!h&&s.tab==='today'; v.isPeriod=!!h&&s.tab==='period'; v.isCombined=!!d&&s.tab==='combined'&&!!d.combined; v.isSettings=wide&&((s.tab==='settings'&&perm.settings)||(s.tab==='manage'&&v.hasManage)); v.isUpload=s.tab==='upload'&&v.hasUpload; if(v.isUpload) v.U=this.upVM();
     v.showPeriodCard=s.tab==='period'||(s.tab==='combined'&&perm.combined);
     const am=Number(b.autoMin==null?5:b.autoMin);
-    v.showSync=!!d&&s.tab!=='settings'&&s.tab!=='upload';
+    v.showSync=!!d&&s.tab!=='settings'&&s.tab!=='manage'&&s.tab!=='upload';
     v.hasUpdate=!!s.newVersion; v.updateUrl=s.appUrl||b.appUrl||'';
     v.updateMsg='새 버전('+String(s.newVersion||'').slice(0,20)+')이 배포되었습니다. 새로고침하면 적용됩니다.';
     v.reloadApp=e=>{ if(!v.updateUrl){ e&&e.preventDefault&&e.preventDefault(); location.reload(); } };
