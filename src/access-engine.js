@@ -22,7 +22,7 @@ var RANK = { '': 0, view: 1, manage: 2, admin: 3 };
 var LABEL = { '': '없음', view: '뷰', manage: '관리', admin: 'admin' };
 var LONG = { '': '권한 없음', view: '뷰권한', manage: '관리권한', admin: '기관 admin' };
 var ROLES = ['시스템관리자', '사용자'];
-var UHEAD = ['email', 'name', 'role', 'access', 'active', 'memo', 'lastSeen'];
+var UHEAD = ['email', 'name', 'role', 'access', 'active', 'memo', 'lastSeen', 'empNo'];
 var HHEAD = ['code', 'name', 'patSheet', 'dbSheet', 'patDateCol', 'patValCol', 'nurseCol', 'doctorCol', 'wardCol', 'targetDoc', 'targetRn', 'targetNurse', 'pharmRate', 'active', 'patUrl', 'dbUrl'];
 var MANAGE_COLS = [9, 10, 11, 12];   // 관리권한이 편집할 수 있는 기관 열 (목표 3종 + 약사재직률)
 var SOURCE_COLS = [2, 3, 4, 5, 6, 7, 8, 14, 15];   // 구글시트 연결(탭·열·URL) — 개발자(시스템관리자)만
@@ -50,6 +50,14 @@ function findUser(d, email) {
   if (u.role !== '시스템관리자' && !Object.keys(parseAccess(u.access)).length) return null;   // 어느 기관에도 권한 없음
   return { email: u.email, name: u.name, role: u.role, access: u.access || '' };
 }
+
+/* 사번 → 등록 이메일 (사번 로그인용) */
+function emailForEmp(d, emp) {
+  emp = String(emp || '').trim().toUpperCase(); if (!emp) return '';
+  var u = (d.users || []).filter(function (x) { return String(x.empNo || '').trim().toUpperCase() === emp && isActive(x); })[0];
+  return u ? u.email : '';
+}
+function maskEmail(e) { var p = String(e || '').split('@'); if (p.length < 2) return ''; return p[0].slice(0, 2) + '***@' + p[1]; }
 
 function permissions(u, hospList) {
   var codes = hospList.map(function (h) { return h.code; });
@@ -140,12 +148,14 @@ function applyUsers(all, rows, perm, codes) {
   var byEmail = {}; all.forEach(function (u) { byEmail[low(u.email)] = u; });
   var out = all.map(function (u) { var c = {}; for (var k in u) c[k] = u[k]; return c; });
   var idx = {}; out.forEach(function (u, i) { idx[low(u.email)] = i; });
-  var seen = {};
+  var seen = {}, seenEmp = {};
   for (var i = 0; i < rows.length; i++) {
     var u = rowToUser(rows[i]), e = low(u.email);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return { ok: false, msg: '이메일 형식 오류: ' + u.email };
     if (seen[e]) return { ok: false, msg: '중복 이메일: ' + u.email };
     seen[e] = 1;
+    var en = String(u.empNo || '').trim().toUpperCase();
+    if (en) { if (seenEmp[en]) return { ok: false, msg: '중복 사번: ' + u.empNo }; seenEmp[en] = 1; u.empNo = en; }
     if (ROLES.indexOf(u.role) < 0) return { ok: false, msg: '권한등급 오류: ' + u.email };
     var old = byEmail[e];
     if (!perm.sys) {
@@ -240,7 +250,7 @@ function migrateLegacyUser(u, codes) {
 
 return {
   version: '1.0', LEVELS: LEVELS, RANK: RANK, LABEL: LABEL, LONG: LONG, ROLES: ROLES, UHEAD: UHEAD, HHEAD: HHEAD, MANAGE_COLS: MANAGE_COLS,
-  parseAccess: parseAccess, formatAccess: formatAccess, findUser: findUser, permissions: permissions,
+  parseAccess: parseAccess, emailForEmp: emailForEmp, maskEmail: maskEmail, formatAccess: formatAccess, findUser: findUser, permissions: permissions,
   roleLabel: roleLabel, accessSummary: accessSummary, buildDashboard: buildDashboard,
   visibleUsers: visibleUsers, adminGet: adminGet, adminLogs: adminLogs,
   applyUsers: applyUsers, applyHosp: applyHosp, canSave: canSave, migrateLegacyUser: migrateLegacyUser,

@@ -7,6 +7,7 @@
  *  3) 프로젝트 설정 > 스크립트 속성:
  *       SUPABASE_URL          https://xxxx.supabase.co
  *       SUPABASE_SERVICE_KEY  service_role 키 (절대 화면·깃허브에 넣지 마세요)
+ *       SUPABASE_SCHEMA       (선택) 칸막이 이름, 기본 aq
  *  4) 함수 syncNow 실행 → 권한 허용 → 실행 로그 확인
  *  5) 함수 installTrigger 실행 → 5분마다 자동 실행 등록
  *
@@ -22,9 +23,10 @@ function prop_(k) {
 }
 function sb_(method, path, body) {
   var url = prop_('SUPABASE_URL').replace(/\/$/, '') + '/rest/v1/' + path, key = prop_('SUPABASE_SERVICE_KEY');
+  var schema = PropertiesService.getScriptProperties().getProperty('SUPABASE_SCHEMA') || 'aq';
   var res = UrlFetchApp.fetch(url, {
     method: method, contentType: 'application/json', muteHttpExceptions: true,
-    headers: { apikey: key, Authorization: 'Bearer ' + key, Prefer: 'return=minimal,resolution=merge-duplicates' },
+    headers: { apikey: key, Authorization: 'Bearer ' + key, Prefer: 'return=minimal,resolution=merge-duplicates', 'Accept-Profile': schema, 'Content-Profile': schema },
     payload: body === undefined ? undefined : JSON.stringify(body)
   });
   var c = res.getResponseCode(), t = res.getContentText();

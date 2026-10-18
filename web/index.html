@@ -55,24 +55,44 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
       </button>
     </div>
     <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:18px;display:flex;flex-direction:column;gap:14px">
-      <h3 style="margin:0;font-size:22px">이메일 인증 로그인</h3>
+      <h3 style="margin:0;font-size:22px">로그인</h3>
       <sc-if value="{{ L.isEmail }}" hint-placeholder-val="{{ true }}">
+        <div role="tablist" aria-label="로그인 방식" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;background:var(--color-neutral-100);border:1px solid var(--aq-line);border-radius:var(--radius-md)">
+          <sc-for list="{{ L.modes }}" as="m" hint-placeholder-count="2">
+            <button role="tab" aria-selected="{{ m.on }}" onClick="{{ m.pick }}" style="min-height:44px;border:1px solid {{ m.bd }};border-radius:var(--radius-sm);background:{{ m.bg }};color:var(--color-text);font:inherit;font-weight:600;font-size:15px;cursor:pointer;box-shadow:{{ m.sh }}">{{ m.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ L.isEmpForm }}" hint-placeholder-val="{{ true }}">
+        <div class="field">
+          <label>사번</label>
+          <input class="input" autocomplete="username" placeholder="예: H1101" value="{{ L.emp }}" onChange="{{ L.onEmp }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px;text-transform:uppercase">
+        </div>
+        <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">사번에 등록된 이메일로 인증코드를 보냅니다.</div>
+        <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.request }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ L.sendLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ L.isGmailForm }}" hint-placeholder-val="{{ false }}">
+        <button class="btn btn-secondary" disabled="{{ L.busy }}" onClick="{{ L.google }}" style="min-height:48px;font-size:15px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">
+          <svg viewBox="0 0 24 24" width="18" height="18" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+          Google(Gmail) 계정으로 로그인
+        </button>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)"><span style="flex:1;height:1px;background:var(--color-divider)"></span>또는 Gmail로 인증코드 받기<span style="flex:1;height:1px;background:var(--color-divider)"></span></div>
         <div class="field">
           <label>이메일</label>
-          <input class="input" type="email" autocomplete="email" placeholder="name@hospital.kr" value="{{ L.email }}" onChange="{{ L.onEmail }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px">
+          <input class="input" type="email" autocomplete="email" placeholder="name@gmail.com" value="{{ L.email }}" onChange="{{ L.onEmail }}" onKeyDown="{{ L.onEmailKey }}" style="min-height:44px;font-size:15px">
         </div>
         <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.request }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ L.sendLabel }}</button>
       </sc-if>
       <sc-if value="{{ L.isCode }}" hint-placeholder-val="{{ false }}">
         <sc-if value="{{ L.hasInfo }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:10px 12px;border-radius:var(--radius-md);background:var(--color-accent-100);border:0;font-size:13px;color:var(--color-accent-700)">{{ L.info }} · {{ L.email }}</div>
+          <div style="padding:10px 12px;border-radius:var(--radius-md);background:var(--color-accent-100);border:0;font-size:13px;color:var(--color-accent-700)">{{ L.info }} · {{ L.shownEmail }}</div>
         </sc-if>
         <div class="field">
           <label>{{ L.codeLabel }}</label>
           <input class="input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" value="{{ L.code }}" onChange="{{ L.onCode }}" onKeyDown="{{ L.onCodeKey }}" style="min-height:44px;font-size:20px;letter-spacing:.3em">
         </div>
         <button class="btn btn-primary" disabled="{{ L.busy }}" onClick="{{ L.verify }}" style="min-height:44px;font-size:16px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">로그인</button>
-        <button class="btn btn-ghost" onClick="{{ L.back }}" style="min-height:44px;align-self:flex-start">이메일 다시 입력</button>
+        <button class="btn btn-ghost" onClick="{{ L.back }}" style="min-height:44px;align-self:flex-start">처음으로</button>
       </sc-if>
       <sc-if value="{{ L.hasErr }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--bad)">
@@ -92,7 +112,7 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
             <button onClick="{{ u.pick }}" style="display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 4px;background:none;border:0;border-top:1px solid var(--color-divider);color:var(--color-text);font:inherit;text-align:left;cursor:pointer;border-radius:var(--radius-md)">
               <div style="flex:1;min-width:0">
                 <div style="display:flex;gap:8px;align-items:center"><span style="font-weight:700;font-size:15px">{{ u.name }}</span><span class="tag tag-accent">{{ u.role }}</span><sc-if value="{{ u.inactive }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">사용중지</span></sc-if></div>
-                <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);overflow:hidden;text-overflow:ellipsis">{{ u.email }} · {{ u.scope }}</div>
+                <div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent);overflow:hidden;text-overflow:ellipsis">{{ u.emp }} · {{ u.email }} · {{ u.scope }}</div>
               </div>
               <svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none;opacity:.5"><path d="m9 18 6-6-6-6"></path></svg>
             </button>
@@ -697,20 +717,35 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
           <div style="grid-column:{{ F }};display:flex;gap:6px;flex-wrap:wrap">
             <sc-for list="{{ S.uFilters }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:36px;padding:0 10px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:13px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for>
           </div>
-          <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);grid-column:{{ F }};padding:0 16px;display:flex;flex-direction:column">
-            <sc-for list="{{ S.users }}" as="u" hint-placeholder-count="6">
-              <button onClick="{{ u.open }}" style="display:flex;align-items:center;gap:10px;min-height:64px;padding:10px 0;background:none;border:0;border-bottom:1px solid var(--color-divider);color:var(--color-text);font:inherit;text-align:left;cursor:pointer;border-radius:var(--radius-md)">
-                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
-                  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span style="font-weight:700">{{ u.name }}</span><sc-if value="{{ u.inactive }}" hint-placeholder-val="{{ false }}"><span class="tag tag-neutral">사용중지</span></sc-if><span style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.email }}</span></div>
-                  <div style="display:flex;gap:4px;flex-wrap:wrap">
-                    <sc-for list="{{ u.chips }}" as="ch" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:5px;padding:2px 8px;font-size:12px;border:1px solid var(--color-divider)"><span style="width:7px;height:7px;background:{{ ch.color }}"></span>{{ ch.label }}</span></sc-for>
-                  </div>
-                  <div style="font-size:11px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.last }}</div>
-                </div>
-                <svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none;opacity:.5"><path d="m9 18 6-6-6-6"></path></svg>
-              </button>
-            </sc-for>
-            <button class="btn btn-ghost" onClick="{{ S.addUser }}" style="min-height:48px;align-self:flex-start;margin:6px 0"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5v14"></path></svg>사용자 추가</button>
+          <div style="grid-column:{{ F }};display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input class="input" type="search" placeholder="이름 · 사번 · 이메일 검색" value="{{ S.uq }}" onChange="{{ S.setUq }}" style="min-height:44px;flex:1 1 220px;max-width:360px">
+            <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ S.userCount }}</span>
+            <span style="flex:1"></span>
+            <button class="btn btn-primary" onClick="{{ S.addUser }}" style="min-height:44px;background-image:var(--aq-btn-p-bg);box-shadow:var(--aq-btn-p);border-radius:var(--radius-md)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)"><svg viewBox="0 0 24 24" width="16" height="16" style="fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M12 5v14"></path></svg>사용자 추가</button>
+          </div>
+          <div style="grid-column:{{ F }};background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:auto;max-height:70vh">
+            <table style="width:100%;border-collapse:collapse;font-size:14px;min-width:820px">
+              <thead><tr>
+                <th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">이름</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">사번</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">이메일</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">계정 구분</th>
+                <sc-for list="{{ S.uCodes }}" as="c" hint-placeholder-count="3"><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0;text-align:center"><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:7px;height:7px;background:{{ c.color }}"></span>{{ c.code }}</span></th></sc-for>
+                <th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">상태</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0">최근 접속</th><th style="padding:10px 12px;border-bottom:1px solid var(--aq-line);text-align:left;font-weight:600;font-size:12px;letter-spacing:.04em;color:color-mix(in srgb, var(--color-text) 62%, transparent);background:var(--color-neutral-100);white-space:nowrap;position:sticky;top:0;text-align:right">관리</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ S.users }}" as="u" hint-placeholder-count="6">
+                  <tr style="cursor:pointer" style-hover="background:var(--color-accent-100)" onClick="{{ u.open }}">
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;font-weight:700;white-space:nowrap">{{ u.name }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;font-variant-numeric:tabular-nums;white-space:nowrap">{{ u.emp }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:color-mix(in srgb, var(--color-text) 72%, transparent)">{{ u.email }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap">{{ u.kind }}</td>
+                    <sc-for list="{{ u.lv }}" as="l" hint-placeholder-count="3"><td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;text-align:center"><span style="display:inline-block;min-width:52px;padding:2px 8px;font-size:12px;border:1px solid {{ l.bd }};background:{{ l.bg }};color:{{ l.fg }}">{{ l.label }}</span></td></sc-for>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap"><span style="font-size:12px;padding:2px 8px;border:1px solid var(--color-divider);color:{{ u.stFg }}">{{ u.status }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;white-space:nowrap;font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ u.last }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid var(--color-divider);text-align:left;vertical-align:middle;text-align:right"><button class="btn btn-secondary" onClick="{{ u.open }}" style="min-height:36px;padding:0 12px;font-size:13px;background:var(--aq-btn-s-bg);border:1px solid var(--aq-btn-s-bd);box-shadow:var(--aq-btn-s);border-radius:var(--radius-md)" style-hover="background:var(--aq-btn-s-hover)" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">편집</button></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <sc-if value="{{ S.noUsers }}" hint-placeholder-val="{{ false }}"><div style="padding:24px;text-align:center;font-size:14px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">조건에 맞는 사용자가 없습니다.</div></sc-if>
           </div>
         </sc-if>
         <sc-if value="{{ S.isHospMode }}" hint-placeholder-val="{{ false }}">
@@ -845,6 +880,7 @@ a{color:var(--color-accent)} a:hover{color:var(--color-accent-600)}
               <h3 style="margin:0;font-size:22px">{{ S.sh.title }}</h3>
               <div class="field"><label>이메일</label><input class="input" type="email" value="{{ S.sh.email }}" onChange="{{ S.sh.setEmail }}" style="min-height:44px"></div>
               <div class="field"><label>이름</label><input class="input" value="{{ S.sh.name }}" onChange="{{ S.sh.setName }}" style="min-height:44px"></div>
+              <div class="field"><label>사번 (사번 로그인용, 선택)</label><input class="input" value="{{ S.sh.empNo }}" onChange="{{ S.sh.setEmp }}" placeholder="예: H1101" style="min-height:44px;text-transform:uppercase"></div>
               <sc-if value="{{ S.sh.canRole }}" hint-placeholder-val="{{ false }}">
                 <div class="field"><label>계정 구분</label><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px"><sc-for list="{{ S.sh.roles }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="min-height:44px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font:inherit;font-size:14px;cursor:pointer;border-radius:var(--radius-md);box-shadow:{{ o.sh }}" style-active="transform:translateY(1px);box-shadow:var(--aq-press)">{{ o.label }}</button></sc-for></div></div>
               </sc-if>
@@ -953,7 +989,7 @@ class Component extends DCLogic {
     if(!window.AQ||!window.AQX){ console.error('calc-engine.js / access-engine.js 로드 실패'); return; }
     const C=this.cfg=window.AQ_CONFIG||{};
     this.transport=this.props.mode==='demo'?null:(C.supabaseUrl&&C.supabaseAnonKey)?'sb':(window.google&&google.script&&google.script.run)?'gs':(C.apiUrl?'http':null);
-    if(this.transport==='sb'){ let m=0; while(!(window.supabase&&window.supabase.createClient)&&m++<200) await wait(30); if(!window.supabase){ console.error('supabase-js 로드 실패'); this.transport=null; } else this.sb=window.supabase.createClient(C.supabaseUrl,C.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'aq-sb-auth'}}); }
+    if(this.transport==='sb'){ let m=0; while(!(window.supabase&&window.supabase.createClient)&&m++<200) await wait(30); if(!window.supabase){ console.error('supabase-js 로드 실패'); this.transport=null; } else this.sb=window.supabase.createClient(C.supabaseUrl,C.supabaseAnonKey,{db:{schema:C.supabaseSchema||'aq'},auth:{persistSession:true,autoRefreshToken:true,storageKey:'aq-sb-auth'}}); }
     this.live=!!this.transport;
     if(!this.live){
       this.DATA=window.AQ_SAMPLE||await (await fetch('sample-data.json')).json();
@@ -1116,6 +1152,8 @@ class Component extends DCLogic {
         return {ok:true,uploadTargets,anCodes:String(D.config.AN_CODES||'AN,AN2,AN3').split(/[,\s]+/).filter(Boolean),autoMin:D.config.AUTO_REFRESH_MIN,cacheMin:D.config.CACHE_MIN,title:D.config.APP_TITLE,today:D.meta.today,user,perm,roleLabel:AQX.roleLabel(user,hs.map(h=>h.code)),hospitals:hs.filter(h=>perm.hospitals.includes(h.code)).map(h=>({code:h.code,name:h.name})),periods:AQ.periodPresets(D)};
       },
       requestCode(email){ return {ok:true,msg:'등록된 사용자라면 인증코드가 발송됩니다(10분 유효)'}; },
+      empEmail(emp){ return {ok:true,email:AQX.emailForEmp(D,emp)}; },
+      google(){ return {ok:false,msg:'데모에서는 Google 로그인 대신 아래 Gmail 인증코드를 사용하세요 (아무 숫자 6자리).'}; },
       verifyCode(email,code){
         const u=AQX.findUser(D,email); if(!u) return {ok:false,msg:'현재 계정은 등록되어 있지 않습니다. 관리자에게 요청하세요'};
         self.session=u.email; log(u.email,u.name,'로그인','이메일 인증'); return {ok:true,token:'demo-'+u.email};
@@ -1199,7 +1237,7 @@ class Component extends DCLogic {
     const kv={}; (st.data||[]).forEach(r=>{kv[r.key]=r.value;});
     const today=new Date(Date.now()+9*3600000).toISOString().slice(0,10);
     const D={meta:{today},config:kv.config||{},hospitals:kv.hospitals||[],criteriaRows:kv.criteria||AQ.DEFAULT_CRITERIA_ROWS,
-      users:(us.data||[]).map(u=>({email:u.email,name:u.name,role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||'',lastSeen:u.last_seen?this.sbTs(u.last_seen):''})),
+      users:(us.data||[]).map(u=>({email:u.email,name:u.name,empNo:u.emp_no||'',role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||'',lastSeen:u.last_seen?this.sbTs(u.last_seen):''})),
       logs:(this.DATA&&this.DATA.logs)||[],uploads:(this.DATA&&this.DATA.uploads)||[],series:{},srcMeta:{}};
     const by={}; (se.data||[]).forEach(r=>{(by[r.code]=by[r.code]||{})[r.kind]=r;});
     let oldest=null;
@@ -1241,7 +1279,7 @@ class Component extends DCLogic {
     else if(which==='CONF') r=await put('config',D.config);
     else if(which==='HOSP') r=await put('hospitals',D.hospitals);
     else if(which==='USERS'){
-      const rows=D.users.map(u=>({email:String(u.email).trim().toLowerCase(),name:u.name||'',role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||''}));
+      const rows=D.users.map(u=>({email:String(u.email).trim().toLowerCase(),name:u.name||'',emp_no:String(u.empNo||'').trim().toUpperCase()||null,role:u.role,access:u.access||'',active:u.active||'Y',memo:u.memo||''}));
       r=await sb.from('app_users').upsert(rows,{onConflict:'email'}).select('email');
       if(!r.error){ const keep=new Set(rows.map(x=>x.email)),gone=(this._sbUsers||[]).filter(e=>!keep.has(e)); if(gone.length) r=await sb.from('app_users').delete().in('email',gone).select('email'); }
     }
@@ -1264,6 +1302,8 @@ class Component extends DCLogic {
         case 'requestCode':{ const {error}=await sb.auth.signInWithOtp({email:String(a[0]).trim().toLowerCase(),options:{shouldCreateUser:true}});
           if(error) return fail(/rate|seconds/i.test(error.message)?'잠시 후 다시 요청해 주세요 (1분에 1회).':'인증코드 발송 실패: '+error.message);
           return {ok:true,msg:'등록된 사용자라면 인증코드가 발송됩니다 (메일함·스팸함 확인)'}; }
+        case 'empEmail':{ const {data,error}=await sb.rpc('aq_email_for_emp',{p_emp:String(a[0]||'')}); if(error) return fail('사번 확인 실패: '+error.message); return {ok:true,email:data||''}; }
+        case 'google':{ const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}}); if(error) return fail('Google 로그인 실패: '+error.message); return {ok:true,redirect:true}; }
         case 'verifyCode':{ const email=String(a[0]).trim().toLowerCase();
           const {error}=await sb.auth.verifyOtp({email,token:String(a[1]),type:'email'});
           if(error) return fail('인증코드가 올바르지 않거나 만료되었습니다.');
@@ -1324,7 +1364,21 @@ class Component extends DCLogic {
   storeKey(){ return this.live?'aq-token':'aq-session'; }
 
   setLogin(p){ this.setState(s=>({login:{...s.login,...p}})); }
+  async google(){
+    this.setLogin({busy:true,err:''});
+    const r=await this.call('google');
+    if(!r.ok) this.setLogin({busy:false,err:r.msg||r.message||'Google 로그인 실패'});
+  }
   async requestCode(){
+    const L0=this.state.login;
+    if((L0.mode||'emp')==='emp'){
+      const emp=String(L0.emp||'').trim().toUpperCase();
+      if(!emp) return this.setLogin({err:'사번을 입력해 주세요.'});
+      this.setLogin({busy:true,err:''});
+      const r=await this.call('empEmail',emp);
+      if(!r.ok||!r.email) return this.setLogin({busy:false,err:r.ok?'등록되지 않았거나 사용중지된 사번입니다.':(r.msg||r.message)});
+      this.state.login.email=r.email; this.setLogin({email:r.email,busy:false});
+    }
     const em=this.state.login.email.trim();
     if(!EMAIL_RE.test(em)) return this.setLogin({err:'이메일 형식을 확인해 주세요.'});
     if(this.lastReq&&Date.now()-this.lastReq<60000&&this.lastReqEmail===em) return this.setLogin({err:'인증요청은 1분에 1회만 가능합니다.'});
@@ -1423,7 +1477,7 @@ class Component extends DCLogic {
     await this.load(st,en);
     this.toast('저장되었습니다 ('+r.count+'행) · 전체 재계산 완료');
   }
-  openSheet(i,code){ const draft=i<0?['','','사용자',code?code+':view':'','Y','','']:this.state.adm.USERS[i].slice(); this.setState({sheet:{i,draft,err:''}}); }
+  openSheet(i,code){ const draft=i<0?['','','사용자',code?code+':view':'','Y','','','']:this.state.adm.USERS[i].slice(); this.setState({sheet:{i,draft,err:''}}); }
   sheetSet(col,val){ this.setState(s=>{const d=s.sheet.draft.slice(); d[col]=val; return {sheet:{...s.sheet,draft:d,err:''}};}); }
   sheetApply(){
     const s=this.state.sheet, d=s.draft.slice(); d[0]=String(d[0]||'').trim();
@@ -1432,6 +1486,8 @@ class Component extends DCLogic {
     if(!String(d[1]||'').trim()) return bad('이름을 입력해 주세요.');
     const rows=this.state.adm.USERS.map(r=>r.slice());
     if(rows.some((r,j)=>j!==s.i&&String(r[0]).toLowerCase()===d[0].toLowerCase())) return bad('이미 목록에 있는 이메일입니다. 목록에서 편집하세요.');
+    d[7]=String(d[7]||'').trim().toUpperCase();
+    if(d[7]&&rows.some((r,j)=>j!==s.i&&String(r[7]||'').toUpperCase()===d[7])) return bad('이미 사용 중인 사번입니다.');
     if(d[2]!=='시스템관리자'&&!Object.keys(AQX.parseAccess(d[3])).length) return bad('한 개 이상 기관에 권한을 지정해 주세요.');
     if(s.i<0) rows.push(d); else rows[s.i]=d;
     this.admRows('USERS',rows); this.setState({sheet:null});
@@ -1442,13 +1498,17 @@ class Component extends DCLogic {
 
   loginVM(){
     const L=this.state.login;
-    return {email:L.email,code:L.code,err:L.err,hasErr:!!L.err,info:L.info,hasInfo:!!L.info,isEmail:L.step==='email',isCode:L.step==='code',busy:L.busy,sendLabel:L.busy?'발송 중…':'인증코드 받기',
+    const mode=L.mode||'emp', isE=L.step==='email';
+    const modes=[['emp','사번'],['gmail','Gmail']].map(([k,label])=>{const on=mode===k; return {label,on,bg:on?'var(--aq-card)':'transparent',bd:on?'var(--aq-line)':'transparent',sh:on?'var(--shadow-sm)':'none',pick:()=>this.setLogin({mode:k,err:''})};});
+    return {modes,emp:L.emp||'',onEmp:e=>this.setLogin({emp:e.target.value.toUpperCase(),err:''}),isEmpForm:isE&&mode==='emp',isGmailForm:isE&&mode==='gmail',google:()=>this.google(),
+      shownEmail:mode==='emp'?AQX.maskEmail(L.email):L.email,
+      email:L.email,code:L.code,err:L.err,hasErr:!!L.err,info:L.info,hasInfo:!!L.info,isEmail:L.step==='email',isCode:L.step==='code',busy:L.busy,sendLabel:L.busy?'발송 중…':'인증코드 받기',
       onEmail:e=>this.setLogin({email:e.target.value,err:''}),onCode:e=>this.setLogin({code:e.target.value.replace(/\D/g,'').slice(0,6),err:''}),
       onEmailKey:e=>{if(e.key==='Enter') this.requestCode();},onCodeKey:e=>{if(e.key==='Enter') this.verify();},
       request:()=>this.requestCode(),verify:()=>this.verify(),back:()=>this.setLogin({step:'email',code:'',err:'',info:'',tries:0}),
       showDemo:!this.live&&this.props.showDemo!==false,
       codeLabel:this.live?'인증코드 6자리':'인증코드 6자리 (데모: 아무 숫자 6자리)',
-      demo:(this.DATA&&window.AQX?this.DATA.users:[]).map(u=>({name:u.name,email:u.email,role:AQX.roleLabel(u,this.DATA.hospitals.map(h=>h.code)),scope:AQX.accessSummary(u,this.DATA.hospitals.map(h=>h.code)),inactive:String(u.active).toUpperCase()==='N',pick:()=>this.demoLogin(u.email)}))};
+      demo:(this.DATA&&window.AQX?this.DATA.users:[]).map(u=>({name:u.name,email:u.email,emp:u.empNo||'사번없음',role:AQX.roleLabel(u,this.DATA.hospitals.map(h=>h.code)),scope:AQX.accessSummary(u,this.DATA.hospitals.map(h=>h.code)),inactive:String(u.active).toUpperCase()==='N',pick:()=>this.demoLogin(u.email)}))};
   }
 
   warnList(h){
@@ -1671,24 +1731,30 @@ class Component extends DCLogic {
     out.isUserMode=s.uMode!=='hosp'; out.isHospMode=s.uMode==='hosp';
     const uf=s.uFilter;
     out.uFilters=['전체',...codes.filter(c=>P.adminHosps.includes(c))].map(x=>seg(x,uf===x,()=>this.setState({uFilter:x})));
-    out.users=U.map((r,i)=>({i,r})).filter(o=>uf==='전체'||o.r[2]==='시스템관리자'||AQX.parseAccess(o.r[3])[uf]).map(({i,r})=>{
-      const acc=AQX.parseAccess(r[3]),sys=r[2]==='시스템관리자';
-      return {name:r[1],email:r[0],isSys:sys,inactive:String(r[4]).toUpperCase()==='N',last:r[6]?'최근 '+r[6]:'접속 기록 없음',open:()=>this.openSheet(i),
+    const uq=String(s.uq||'').trim().toLowerCase();
+    const LVS={admin:['var(--color-accent)','var(--color-accent)','#fff'],manage:['var(--color-accent-300)','var(--color-accent-100)','var(--color-accent-800)'],view:['var(--color-divider)','transparent','var(--color-text)'],'':['transparent','transparent','color-mix(in srgb, var(--color-text) 35%, transparent)']};
+    out.uq=s.uq||''; out.setUq=e=>this.setState({uq:e.target.value});
+    out.uCodes=codes.map(c=>({code:c,color:hc0(c)}));
+    out.users=U.map((r,i)=>({i,r})).filter(o=>uf==='전체'||o.r[2]==='시스템관리자'||AQX.parseAccess(o.r[3])[uf]).filter(o=>!uq||[o.r[0],o.r[1],o.r[7]].some(x=>String(x||'').toLowerCase().includes(uq))).map(({i,r})=>{
+      const acc=AQX.parseAccess(r[3]),sys=r[2]==='시스템관리자',off=String(r[4]).toUpperCase()==='N';
+      return {name:r[1],email:r[0],emp:r[7]||'–',kind:sys?'시스템관리자':'사용자',status:off?'사용중지':'사용',stFg:off?'var(--bad)':'var(--color-text)',
+        lv:codes.map(c=>{const k=sys?'admin':(acc[c]||''),[bd,bg,fg]=LVS[k]; return {label:k?AQX.LABEL[k]:'–',bd,bg,fg};}),
+        isSys:sys,inactive:off,last:r[6]||'–',open:e=>{if(e&&e.stopPropagation) e.stopPropagation(); this.openSheet(i);},
         chips:sys?[{label:'시스템관리자 · 전 기관 admin',color:'var(--color-accent)'}]:codes.filter(c=>acc[c]).map(c=>({label:c+' '+AQX.LABEL[acc[c]],color:hc0(c)}))};});
     const hc=P.adminHosps.includes(s.uHosp)?s.uHosp:P.adminHosps[0];
     out.hospTabs=P.adminHosps.map(c=>seg(c,c===hc,()=>this.setState({uHosp:c})));
     out.hospColor=hc0(hc); out.hospCode=hc||'';
     out.members=U.map((r,i)=>({i,r})).filter(o=>o.r[2]!=='시스템관리자'&&AQX.parseAccess(o.r[3])[hc]).map(({i,r})=>{const cur=AQX.parseAccess(r[3])[hc]||'';
       return {name:r[1],email:r[0],inactive:String(r[4]).toUpperCase()==='N',opts:LV.map(lv=>seg(AQX.LABEL[lv],cur===lv,()=>this.setLevel(i,hc,lv)))};});
-    out.memberCount=out.members.length+'명';
+    out.memberCount=out.members.length+'명'; out.userCount=out.users.length+'명'; out.noUsers=!out.users.length;
     out.addMember=()=>this.openSheet(-1,hc);
     out.addUser=()=>this.openSheet(-1);
     out.logs=a.logs.map(l=>({time:l[0],email:l[1],name:l[2],act:l[3],detail:l[4]}));
     const sh=s.sheet; out.sheetOpen=!!sh;
     if(sh){
       const dr=sh.draft,set=col=>e=>this.sheetSet(col,e.target.value),sys=dr[2]==='시스템관리자',acc=AQX.parseAccess(dr[3]);
-      out.sh={title:sh.i<0?'사용자 추가':'사용자 편집',isEdit:sh.i>=0&&P.sys,email:dr[0]??'',name:dr[1]??'',memo:dr[5]??'',last:dr[6]||'–',
-        setEmail:set(0),setName:set(1),setMemo:set(5),
+      out.sh={title:sh.i<0?'사용자 추가':'사용자 편집',isEdit:sh.i>=0&&P.sys,email:dr[0]??'',name:dr[1]??'',memo:dr[5]??'',last:dr[6]||'–',empNo:dr[7]??'',
+        setEmail:set(0),setName:set(1),setMemo:set(5),setEmp:e=>this.sheetSet(7,e.target.value.toUpperCase()),
         canRole:P.sys,roles:['사용자','시스템관리자'].map(x=>seg(x,dr[2]===x,()=>this.sheetSet(2,x))),isSys:sys,notSys:!sys,
         matrix:codes.map(c=>{const cur=acc[c]||'',ed=P.adminHosps.includes(c); return {code:c,color:hc0(c),canEdit:ed,readOnly:!ed,cur:AQX.LONG[cur],opts:LV.map(lv=>seg(AQX.LABEL[lv],cur===lv,()=>this.sheetLevel(c,lv)))};}),
         canActive:P.globalAdmin,active:['Y','N'].map(x=>seg(x==='Y'?'사용':'중지',String(dr[4]||'Y').toUpperCase()===x,()=>this.sheetSet(4,x))),

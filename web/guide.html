@@ -141,7 +141,8 @@ const WORDS=[
   ['SQL','데이터베이스에 내리는 명령문. 이미 만들어 둔 파일을 붙여넣고 Run만 누르면 됩니다.'],
   ['API 키','데이터베이스 출입증. anon = 일반 출입증(화면에 들어가도 됨), service_role = 마스터키(절대 비밀).'],
   ['환경변수','Netlify에 맡겨 두는 설정값. 여기 넣은 주소·키가 화면에 자동으로 들어갑니다.'],
-  ['SMTP','메일 발송 서버. Gmail을 연결해 인증코드 메일을 보냅니다.']].map(([k,v])=>({k,v}));
+  ['SMTP','메일 발송 서버. Gmail을 연결해 인증코드 메일을 보냅니다.'],
+  ['스키마 (Schema)','데이터베이스 안의 칸막이. 이 시스템은 aq 칸막이만 써서, 한 프로젝트에 여러 시스템을 넣어도 섞이지 않습니다.']].map(([k,v])=>({k,v}));
 const PARTS=[
  {id:'p1',kicker:'1단계 · 약 10분',title:'GitHub — 파일 보관함 만들기',lead:'받은 aq-supabase.zip 파일을 GitHub에 올리는 단계입니다.',steps:[
   {id:'gh1',t:'GitHub 가입',ps:['@@github.com/signup|https://github.com/signup@@ 접속','이메일 입력 → [[Continue]] → 비밀번호 → 사용자 이름(영문, 예: `hyosarang-it`) → [[Continue]]','퍼즐(로봇 확인)을 풀고 [[Create account]]','메일로 온 **8자리 코드** 입력 → 질문 화면은 [[Skip personalization]] 으로 넘어가도 됩니다'],ok:'오른쪽 위에 동그란 프로필 그림이 보입니다. 메모장 1)에 아이디를 적으세요.'},
@@ -151,10 +152,11 @@ const PARTS=[
   {id:'gh5',t:'연습용 브랜치 dev 만들기',ps:['저장소 화면 왼쪽 위 [[main ▾]] 버튼 클릭','입력칸에 `dev` 입력 → 아래 [[Create branch dev from main]] 클릭'],ok:'버튼이 dev ▾ 로 바뀝니다. 다시 눌러 main 으로 돌려놓으세요. 이제 main(운영)과 dev(개발) 두 벌이 있습니다.'}]},
  {id:'p2',kicker:'2단계 · 약 15분',title:'Supabase — 공용 데이터베이스 만들기',lead:'모든 사용자가 같이 쓰는 장부를 만듭니다. 만들어 둔 SQL 파일을 붙여넣기만 하면 표와 보안 규칙이 자동으로 생깁니다.',steps:[
   {id:'sb1',t:'Supabase 가입',ps:['@@supabase.com/dashboard|https://supabase.com/dashboard@@ 접속 → [[Continue with GitHub]] → [[Authorize supabase]]','처음이면 조직(Organization)을 만들라고 합니다. 이름 `hyosarang`, Type은 Personal 또는 Company, Plan은 **Free** → [[Create organization]]'],ok:'"Create a new project" 화면이 나옵니다.'},
-  {id:'sb2',t:'프로젝트 만들기',ps:['Project name: `'+SITE+'`','Database Password: [[Generate a password]] 누른 뒤 [[Copy]] → 메모장 2)에 붙여넣기','Region: **Northeast Asia (Seoul)**','[[Create new project]] → 1~2분 기다리기'],ok:'프로젝트 첫 화면이 보이고 왼쪽에 아이콘 메뉴가 생깁니다.'},
+  {id:'sb2',t:'프로젝트 만들기 (기존 프로젝트를 쓰면 건너뛰기)',ps:['**이미 쓰는 프로젝트에 함께 넣어도 됩니다.** 이 시스템은 `aq` 라는 칸막이(스키마) 안에만 표를 만들어 다른 시스템과 섞이지 않습니다. 무료는 켜진 프로젝트가 2개까지라, 기존 프로젝트를 쓰면 이 단계는 건너뛰고 그 프로젝트를 열면 됩니다','Project name: `'+SITE+'`','Database Password: [[Generate a password]] 누른 뒤 [[Copy]] → 메모장 2)에 붙여넣기','Region: **Northeast Asia (Seoul)**','[[Create new project]] → 1~2분 기다리기'],ok:'프로젝트 첫 화면이 보이고 왼쪽에 아이콘 메뉴가 생깁니다.'},
   {id:'sb3',t:'표와 보안 규칙 만들기 (SQL 실행)',ps:['압축 푼 폴더의 `supabase/01_schema.sql` 파일을 오른쪽 클릭 → 연결 프로그램 → **메모장**으로 열기','메모장에서 [[Ctrl]]+[[A]] (전체 선택) → [[Ctrl]]+[[C]] (복사)','Supabase 왼쪽 메뉴 **SQL Editor** (>_ 모양 아이콘) → [[+ New query]] 또는 빈 편집 화면 클릭 → [[Ctrl]]+[[V]] (붙여넣기)','편집 화면 맨 아래로 내려가 `여기에본인이메일@gmail.com` 을 **내 이메일**로 바꾸기 (작은따옴표는 그대로)','오른쪽 아래 [[Run]] (또는 Ctrl+Enter)'],ok:'아래 결과 창에 "Success. No rows returned" 가 나옵니다.',warn:'"destructive operation" 확인 창이 뜨면 [[Run this query]] 를 누르세요. 이 이메일이 첫 관리자(개발자)가 되니 실제로 메일을 받을 수 있는 주소여야 합니다.'},
+  {id:'sbx',t:'칸막이(aq) 열어 주기',ps:['왼쪽 아이콘 메뉴의 **Integrations** (블록 모양) → **Data API** (예전 화면: Project Settings → Data API)','가운데 위 탭 **Overview · Settings · Docs** 중 [[Settings]] 클릭','**Exposed schemas** 칸을 클릭 → 목록에서 `aq` 선택 (기존 public 등은 그대로 둠)','[[Save]]','같은 Data API 화면 Overview 탭의 **API URL** 에서 뒤의 `/rest/v1/` 를 뺀 주소가 Project URL 입니다'],ok:'Exposed schemas 칸에 public 과 aq 가 함께 보입니다.',warn:'이 설정을 빠뜨리면 앱에서 "schema must be one of the following" 또는 "서버 오류"가 납니다.'},
   {id:'sb4',t:'(선택) 샘플 데이터 넣기',ps:['같은 방법으로 `supabase/02_sample_data.sql` 을 열어 전체 복사','SQL Editor 에서 [[+ New query]] → 붙여넣기 → [[Run]]'],ok:'구글시트를 연결하기 전에도 앱 화면에 숫자가 나옵니다. 나중에 구글시트 동기화가 시작되면 실제 데이터로 바뀝니다.'},
-  {id:'sb5',t:'잘 만들어졌는지 눈으로 확인',ps:['왼쪽 메뉴 **Table Editor** (표 모양 아이콘)','왼쪽 목록에 `app_logs`, `app_users`, `series`, `settings`, `upload_history` 5개가 보이는지 확인','`app_users` 클릭 → 내 이메일이 한 줄 들어 있는지 확인'],ok:'5개 표가 있고 app_users 에 내 이메일과 시스템관리자가 보입니다.'},
+  {id:'sb5',t:'잘 만들어졌는지 눈으로 확인',ps:['왼쪽 메뉴 **Table Editor** (표 모양 아이콘)','왼쪽 위 **schema** 선택 상자를 `public` → `aq` 로 바꾸기','왼쪽 목록에 `app_logs`, `app_users`, `series`, `settings`, `upload_history` 5개가 보이는지 확인','`app_users` 클릭 → 내 이메일이 한 줄 들어 있는지 확인'],ok:'5개 표가 있고 app_users 에 내 이메일과 시스템관리자가 보입니다.'},
   {id:'sb6',t:'주소와 열쇠(키) 메모하기',ps:['왼쪽 아래 톱니바퀴 **Project Settings**','**Data API** (또는 API) 메뉴 → **Project URL** 옆 [[Copy]] → 메모장 2)','**API Keys** 메뉴 → **Legacy API Keys** 탭 (탭이 없으면 그 화면 그대로)','`anon` `public` 키 [[Copy]] → 메모장 2)','`service_role` `secret` 키 [[Reveal]] → [[Copy]] → 메모장 2)'],ok:'메모장 2)의 Project URL, anon, service_role 세 칸이 모두 채워졌습니다.',warn:'service_role 키는 데이터베이스 마스터키입니다. GitHub·카톡·메일에 절대 붙여넣지 마세요. 6단계에서 한 번만 씁니다.'}]},
  {id:'p3',kicker:'3단계 · 약 15분',title:'로그인 인증코드 메일 설정',lead:'Supabase가 기본으로 보내는 메일은 프로젝트 주인에게만, 시간당 몇 통만 갑니다. 병원 사용자에게 보내려면 Gmail로 보내도록 연결합니다. 이 단계 전에는 2단계에서 적은 내 이메일로만 로그인 테스트가 됩니다.',steps:[
   {id:'ml1',t:'Gmail 2단계 인증 켜기',ps:['메일을 보낼 Gmail 계정(병원 공용 계정 권장)으로 로그인','@@Google 계정 → 2단계 인증|https://myaccount.google.com/signinoptions/twosv@@ → 안내대로 휴대폰 번호 등록 → 사용 설정'],ok:'"2단계 인증 사용 중" 이 보입니다.'},
@@ -190,6 +192,8 @@ const FAQ=[
   ['"현재 계정은 등록되어 있지 않습니다"','관리자가 사용자권한에 그 이메일을 등록하고 저장했는지, 사용여부가 사용인지 확인하세요.'],
   ['SQL Run 에서 빨간 오류가 나요','오류 첫 줄을 캡처해 채팅에 올려 주세요. "already exists" 는 이미 만들어졌다는 뜻이라 괜찮습니다.'],
   ['숫자가 비어 있어요','샘플 데이터(2단계 4번)를 넣었는지, 또는 6단계 동기화 로그에 ✓ 가 나오는지 확인하세요.'],
+  ['"schema must be one of the following" 오류','2단계의 "칸막이(aq) 열어 주기" 를 하지 않은 것입니다. Project Settings → Data API → Exposed schemas 에 aq 추가.'],
+  ['같은 프로젝트에 이 시스템을 하나 더 만들고 싶어요','01_schema.sql 을 메모장에서 바꾸기(Ctrl+H)로 "aq." → "aq2." , "schema aq" → "schema aq2" 모두 바꿔 실행 → Exposed schemas 에 aq2 추가 → 새 Netlify 사이트 환경변수에 SUPABASE_SCHEMA = aq2 추가.'],
   ['한동안 안 썼더니 접속이 안 돼요','Supabase 무료 프로젝트는 7일 동안 사용이 없으면 일시정지됩니다. Supabase 대시보드에서 Restore project. 6단계 자동 동기화를 켜 두면 멈추지 않습니다.']].map(([q,a])=>({q,a}));
 function segs(str){ const out=[],re=/\*\*(.+?)\*\*|`(.+?)`|\[\[(.+?)\]\]|@@(.+?)\|(.+?)@@/g; let i=0,m;
   while((m=re.exec(str))){ if(m.index>i) out.push({isT:true,v:str.slice(i,m.index)});

@@ -15,7 +15,7 @@ SHA="${COMMIT_REF:-local}"
 VER="$(TZ=Asia/Seoul date +%m%d-%H%M)-${SHA:0:7}"
 
 cat > site/config.js <<EOF
-window.AQ_CONFIG = { supabaseUrl: '${SUPABASE_URL:-}', supabaseAnonKey: '${SUPABASE_ANON_KEY:-}', env: '${ENVN}', version: '${VER}' };
+window.AQ_CONFIG = { supabaseUrl: '${SUPABASE_URL:-}', supabaseAnonKey: '${SUPABASE_ANON_KEY:-}', supabaseSchema: '${SUPABASE_SCHEMA:-aq}', env: '${ENVN}', version: '${VER}' };
 EOF
 printf '{"version":"%s"}\n' "$VER" > site/version.json
 echo "✓ build ${ENVN} ${VER}"

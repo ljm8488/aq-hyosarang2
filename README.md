@@ -33,7 +33,9 @@ Netlify (무료, 화면)  ──로그인·조회·저장·업로드──▶  S
 
 ## 설정 요약 (자세한 화면 안내는 guide.html)
 
-1. **Supabase** 프로젝트 생성 (Region: Seoul) → SQL Editor에서 `01_schema.sql` 실행 (맨 아래 이메일을 본인 것으로)
+1. **Supabase** 프로젝트 생성(Region: Seoul) 또는 **기존 프로젝트** 사용 → SQL Editor에서 `01_schema.sql` 실행 (맨 아래 이메일을 본인 것으로)
+   → **Project Settings → Data API → Exposed schemas** 에 `aq` 추가 → Save
+   (모든 표는 `aq` 칸막이(스키마) 안에 만들어져 같은 프로젝트의 다른 시스템과 섞이지 않습니다)
 2. Supabase **Authentication**
    - Email Templates > Magic Link 본문에 `{{ .Token }}` 추가 (6자리 코드 메일)
    - SMTP Settings: Gmail 앱 비밀번호로 사용자 지정 SMTP 설정 (기본 메일은 팀원에게만 발송됨)
