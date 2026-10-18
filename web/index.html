@@ -1816,8 +1816,12 @@ class Component extends DCLogic {
     const row=[emp.toLowerCase()+'@aq.local',name,sys?'시스템관리자':'사용자','','Y','','',emp,gm,sys?'전체':n.hosp,n.dept||'',n.title||'','Y','Y','N','Y','N',n.role==='org'?'Y':'N',n.from||'',n.to||''];
     if(!sys) row[3]=AQX.deriveAccess(this.uRowObj(row),this.state.adm.hospCodes);
     this.uHistPush(row,'신규 등록 ('+({sys:'시스템 관리자',org:'기관 관리자',user:'사용자'}[n.role])+')');
-    this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.concat([row])},uNew:null}),()=>this.uSave());
-    this.toast(name+' 등록됨 · 목록의 [편집]에서 비밀번호를 지정하세요');
+    this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.concat([row])},uNew:null}),async()=>{
+      this.uSave(); await wait(400); while(this.state.uSaving) await wait(150);
+      const r=await this.call('adminSetPassword',row[0],'1234');
+      if(r.ok) this.toast(name+' 등록됨 · 초기 비밀번호 1234 (첫 로그인 때 변경)');
+      else this.toast(name+' 등록됨 · 초기 비밀번호 설정 실패: '+(r.msg||r.message)+' — [편집]에서 비밀번호를 지정하세요',true);
+    });
   }
   uRowObj(r){ const o={}; AQX.UHEAD.forEach((k,i)=>o[k]=r[i]); return o; }
   uEdit(i,col,val,save){
