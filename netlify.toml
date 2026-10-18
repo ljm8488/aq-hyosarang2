@@ -1,0 +1,23 @@
+# Netlify 설정 — 수정할 필요 없습니다.
+[build]
+  command = "bash scripts/build.sh"
+  publish = "site"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/config.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/version.json"
+  [headers.values]
+    Cache-Control = "no-store"

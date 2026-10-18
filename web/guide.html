@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>처음 하는 분을 위한 설정 안내 — 적정성평가</title>
+<link rel="stylesheet" href="_ds/industry-2b4f9653-154c-463e-899e-d4cc6e2a21ca/styles.css">
+<script src="_ds/industry-2b4f9653-154c-463e-899e-d4cc6e2a21ca/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{--aq-card:#fff;--aq-line:color-mix(in srgb,#1d1f20 11%,transparent);--good:#2a7a45;--bad:#b8392f;--font-body:"Barlow","Noto Sans KR",system-ui,sans-serif;--font-heading:"Barlow Condensed","Noto Sans KR",system-ui,sans-serif}
+html,body{margin:0;background:var(--color-bg)}
+body{word-break:keep-all;overflow-wrap:anywhere}
+h1,h2,h3{line-height:1.25}
+button,.btn{white-space:nowrap;flex-shrink:0}
+a{color:var(--color-accent-700)} a:hover{color:var(--color-accent-800)}
+code,pre{font-variant-ligatures:none}
+code{white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--color-accent-100);color:var(--color-accent-800);padding:1px 5px;border-radius:3px}
+</style>
+</helmet>
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);line-height:1.65;font-size:15px">
+  <header style="position:sticky;top:0;z-index:10;background:var(--aq-card);border-bottom:1px solid var(--aq-line)">
+    <div style="max-width:920px;margin:0 auto;padding:10px 20px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1 1 260px;min-width:0"><div style="font-family:var(--font-heading);font-weight:600;font-size:20px;line-height:1.2">처음 하는 분을 위한 설정 안내</div><div style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">GitHub · Supabase · Netlify를 한 번도 안 써 본 분 기준 · 천천히 약 1시간</div></div>
+        <div style="flex:0 1 220px;min-width:160px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span>진행</span><b>{{ doneTxt }}</b></div>
+          <div style="height:8px;border-radius:4px;overflow:hidden;background:color-mix(in srgb, var(--color-text) 10%, transparent)"><div style="height:100%;width:{{ pct }};background:var(--color-accent)"></div></div>
+        </div>
+      </div>
+      <nav style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px 2px">
+        <sc-for list="{{ toc }}" as="t" hint-placeholder-count="8"><a href="{{ t.href }}" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;border-radius:999px;border:1px solid var(--aq-line);background:{{ t.bg }};color:var(--color-text);font-size:13px;text-decoration:none;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.dot }}"></span>{{ t.label }}</a></sc-for>
+      </nav>
+    </div>
+  </header>
+  <main style="max-width:920px;margin:0 auto;padding:24px 20px 96px;display:flex;flex-direction:column;gap:28px">
+    <section id="intro" style="display:flex;flex-direction:column;gap:14px;scroll-margin-top:110px">
+      <h1 style="margin:0;font-size:32px">먼저, 큰 그림</h1>
+      <p style="margin:0;max-width:720px;text-wrap:pretty">이 시스템은 서비스 4개를 이어서 만듭니다. 모두 무료이고, 할 일은 각 사이트에 가입해서 버튼을 누르고 값을 붙여넣는 것입니다. 프로그램을 설치하거나 코드를 짤 필요는 없습니다.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+        <sc-for list="{{ services }}" as="v" hint-placeholder-count="4">
+          <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:14px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-family:var(--font-heading);font-weight:600;font-size:22px">{{ v.name }}</span><span style="font-size:12px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ v.role }}</span></div>
+            <div style="font-size:14px;padding:6px 10px;border-radius:var(--radius-md);background:var(--color-accent-100);color:var(--color-accent-800)">비유: {{ v.like }}</div>
+            <div style="font-size:14px">{{ v.does }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+        <b>데이터가 흐르는 길</b>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px">
+          <span style="padding:4px 10px;border-radius:var(--radius-md);border:1px solid var(--aq-line);background:var(--color-bg)">구글시트</span><span>→ 5분마다 →</span>
+          <span style="padding:4px 10px;border-radius:var(--radius-md);border:1px solid var(--aq-line);background:var(--color-bg)">Apps Script</span><span>→</span>
+          <span style="padding:4px 10px;border-radius:var(--radius-md);border:1px solid var(--color-accent);background:var(--color-accent-100);font-weight:700">Supabase (공용 장부)</span><span>⇄</span>
+          <span style="padding:4px 10px;border-radius:var(--radius-md);border:1px solid var(--aq-line);background:var(--color-bg)">Netlify 고정 주소의 화면</span><span>⇄</span>
+          <span style="padding:4px 10px;border-radius:var(--radius-md);border:1px solid var(--aq-line);background:var(--color-bg)">사용자 A · B · C</span>
+        </div>
+        <div style="font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">GitHub은 화면 파일을 보관하다가, 파일이 바뀌면 Netlify에 알려 고정 주소의 화면을 새것으로 바꿉니다.</div>
+      </div>
+    </section>
+    <section id="words" style="display:flex;flex-direction:column;gap:10px;scroll-margin-top:110px">
+      <h2 style="margin:0;font-size:26px">알아 두면 편한 단어</h2>
+      <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);display:grid;grid-template-columns:max-content minmax(0,1fr)">
+        <sc-for list="{{ words }}" as="w" hint-placeholder-count="10">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--aq-line);font-weight:700;white-space:nowrap">{{ w.k }}</div>
+          <div style="padding:10px 14px 10px 0;border-bottom:1px solid var(--aq-line);font-size:14px">{{ w.v }}</div>
+        </sc-for>
+      </div>
+    </section>
+    <section id="memo" style="display:flex;flex-direction:column;gap:10px;scroll-margin-top:110px">
+      <h2 style="margin:0;font-size:26px">시작 전: 메모장 하나 열기</h2>
+      <p style="margin:0;max-width:720px">설정하다 보면 긴 주소와 열쇠(키)를 여기저기 붙여넣어야 합니다. 아래 내용을 복사해 메모장(윈도우 시작 → "메모장")에 붙여넣고 <b>설정메모.txt</b>로 저장한 뒤, 단계마다 빈칸을 채우세요. <b>이 파일은 다른 사람에게 보내지 마세요.</b></p>
+      <div style="position:relative"><pre style="margin:0;padding:14px;border-radius:var(--radius-md);background:#1d1f20;color:#e4e6e8;font-size:13px;line-height:1.6;white-space:pre-wrap">{{ memo }}</pre><button class="btn btn-secondary" onClick="{{ copyMemo }}" style="position:absolute;top:8px;right:8px;min-height:32px;padding:0 12px;font-size:13px">{{ memoLabel }}</button></div>
+    </section>
+    <sc-for list="{{ parts }}" as="pt" hint-placeholder-count="3">
+      <section id="{{ pt.id }}" style="display:flex;flex-direction:column;gap:12px;scroll-margin-top:110px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div><div style="font-size:12px;letter-spacing:.08em;color:var(--color-accent-700);font-weight:700">{{ pt.kicker }}</div><h2 style="margin:2px 0 0;font-size:26px">{{ pt.title }}</h2></div>
+          <span style="font-size:13px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">{{ pt.prog }}</span>
+        </div>
+        <sc-if value="{{ pt.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0;max-width:720px;text-wrap:pretty">{{ pt.lead }}</p></sc-if>
+        <sc-for list="{{ pt.steps }}" as="st" hint-placeholder-count="4">
+          <div style="background:var(--aq-card);border:1px solid {{ st.bd }};border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px">
+              <button aria-label="완료 표시" onClick="{{ st.toggle }}" style="width:32px;height:32px;border-radius:50%;border:2px solid {{ st.ckBd }};background:{{ st.ckBg }};color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ st.mark }}</button>
+              <div style="flex:1;min-width:0"><span style="font-size:12px;font-weight:700;color:var(--color-accent-700)">{{ st.no }}</span><div style="font-weight:700;font-size:17px;line-height:1.35">{{ st.t }}</div></div>
+              <sc-if value="{{ st.done }}" hint-placeholder-val="{{ false }}"><button class="btn btn-ghost" onClick="{{ st.open }}" style="min-height:32px;font-size:13px">{{ st.openLabel }}</button></sc-if>
+            </div>
+            <sc-if value="{{ st.show }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:0 16px 16px 60px;display:flex;flex-direction:column;gap:10px">
+                <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ st.ps }}" as="p" hint-placeholder-count="3"><li><sc-for list="{{ p.segs }}" as="g" hint-placeholder-count="1"><sc-if value="{{ g.isT }}" hint-placeholder-val="{{ true }}">{{ g.v }}</sc-if><sc-if value="{{ g.isB }}" hint-placeholder-val="{{ false }}"><b>{{ g.v }}</b></sc-if><sc-if value="{{ g.isC }}" hint-placeholder-val="{{ false }}"><code>{{ g.v }}</code></sc-if><sc-if value="{{ g.isK }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;padding:0 8px;margin:0 2px;border:1px solid color-mix(in srgb, #1d1f20 22%, transparent);border-radius:var(--radius-md);background:linear-gradient(180deg,#fff,#eef0f2);box-shadow:0 1px 0 color-mix(in srgb,#1d1f20 14%,transparent);font-size:.92em;font-weight:500;white-space:nowrap">{{ g.v }}</span></sc-if><sc-if value="{{ g.isA }}" hint-placeholder-val="{{ false }}"><a href="{{ g.href }}" target="_blank" rel="noopener">{{ g.v }}</a></sc-if></sc-for></li></sc-for>
+                </ol>
+                <sc-if value="{{ st.hasCode }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:relative"><pre style="margin:0;padding:12px;border-radius:var(--radius-md);background:#1d1f20;color:#e4e6e8;font-size:12.5px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere">{{ st.code }}</pre><button class="btn btn-secondary" onClick="{{ st.copy }}" style="position:absolute;top:8px;right:8px;min-height:30px;padding:0 10px;font-size:12px">{{ st.copyLabel }}</button></div>
+                </sc-if>
+                <sc-if value="{{ st.hasOk }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;padding:10px 12px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--good) 10%, transparent);font-size:14px"><b style="color:var(--good);white-space:nowrap">성공이면</b><span>{{ st.ok }}</span></div></sc-if>
+                <sc-if value="{{ st.hasWarn }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;padding:10px 12px;border-radius:var(--radius-md);background:color-mix(in srgb, var(--bad) 8%, transparent);font-size:14px"><b style="color:var(--bad);white-space:nowrap">주의</b><span>{{ st.warn }}</span></div></sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </section>
+    </sc-for>
+    <section id="faq" style="display:flex;flex-direction:column;gap:10px;scroll-margin-top:110px">
+      <h2 style="margin:0;font-size:26px">막혔을 때</h2>
+      <div style="background:var(--aq-card);border:1px solid var(--aq-line);border-radius:var(--radius-lg);display:flex;flex-direction:column">
+        <sc-for list="{{ faq }}" as="f" hint-placeholder-count="6">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--aq-line);display:flex;flex-direction:column;gap:2px"><b>{{ f.q }}</b><span style="font-size:14px">{{ f.a }}</span></div>
+        </sc-for>
+      </div>
+      <p style="margin:0;font-size:14px;color:color-mix(in srgb, var(--color-text) 62%, transparent)">화면 메뉴 이름이 이 안내와 조금 다를 수 있습니다 (서비스가 가끔 이름을 바꿉니다). 비슷한 이름을 찾거나, 막힌 화면을 캡처해서 채팅에 올려 주시면 다음 단계를 안내해 드립니다.</p>
+    </section>
+  </main>
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--color-text);color:var(--color-bg);padding:8px 14px;border-radius:var(--radius-md);font-size:14px;box-shadow:var(--shadow-lg)">{{ toast }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SITE='aq-hyosarang';
+const MEMO='[적정성평가 설정 메모] — 다른 사람에게 보내지 마세요\n\n1) GitHub 아이디:\n   GitHub 저장소 주소: https://github.com/(아이디)/'+SITE+'\n\n2) Supabase 데이터베이스 비밀번호:\n   Project URL:            https://(영문숫자).supabase.co\n   anon public 키:         eyJ......  (화면용, 공개돼도 괜찮은 키)\n   service_role 키(비밀):  eyJ......  (구글시트 동기화 전용, 절대 공유 금지)\n\n3) 메일 보내는 Gmail 주소:\n   Gmail 앱 비밀번호(16자리):\n\n4) 운영 주소:            https://'+SITE+'.netlify.app\n   개발 미리보기 주소:   https://dev--'+SITE+'.netlify.app';
+const TPL='<h2>적정성평가 로그인 인증코드</h2>\n<p>아래 6자리 코드를 앱 화면에 입력하세요. (10분 유효)</p>\n<p style="font-size:28px;font-weight:700;letter-spacing:6px">{{ .Token }}</p>\n<p>본인이 요청하지 않았다면 이 메일을 무시하세요.</p>';
+const SERVICES=[
+  {name:'GitHub',role:'코드 보관',like:'수정 기록이 남는 구글드라이브',does:'화면 파일을 보관합니다. 파일을 고치면 Netlify가 자동으로 새 화면을 올립니다.'},
+  {name:'Supabase',role:'공용 데이터베이스 + 로그인',like:'모두가 같이 쓰는 엑셀 장부 + 출입 관리실',does:'모든 사용자의 데이터·권한·업로드가 여기 한 곳에 저장됩니다. 인증코드 메일도 보냅니다.'},
+  {name:'Netlify',role:'고정 주소',like:'홈페이지 주소를 빌려주는 곳',does:'aq-hyosarang.netlify.app 같은 바뀌지 않는 주소로 화면을 보여 줍니다.'},
+  {name:'Apps Script',role:'자동 복사 로봇',like:'5분마다 시트를 베껴 장부에 옮겨 적는 직원',does:'구글시트 데이터를 읽어 Supabase에 넣습니다. 구글시트를 쓰지 않으면 생략해도 됩니다.'}];
+const WORDS=[
+  ['저장소 (Repository)','GitHub 안의 폴더 하나. 이 시스템의 모든 파일이 들어갑니다.'],
+  ['커밋 (Commit)','GitHub에서 "변경 내용 저장" 버튼. 누가 언제 무엇을 바꿨는지 기록됩니다.'],
+  ['브랜치 (Branch)','같은 파일의 다른 버전. main = 실제 사용자들이 보는 운영본, dev = 연습·개발본.'],
+  ['풀 리퀘스트 (Pull request)','dev에서 고친 내용을 main으로 옮겨 달라는 요청. Merge를 누르면 운영에 반영됩니다.'],
+  ['배포 (Deploy)','파일을 인터넷 주소에 올려 다른 사람이 볼 수 있게 하는 것. Netlify가 자동으로 합니다.'],
+  ['프로젝트','Supabase 안의 데이터베이스 하나. 이 시스템용으로 하나 만듭니다.'],
+  ['테이블','데이터베이스 안의 엑셀 시트 같은 표. settings, app_users, series 등이 생깁니다.'],
+  ['SQL','데이터베이스에 내리는 명령문. 이미 만들어 둔 파일을 붙여넣고 Run만 누르면 됩니다.'],
+  ['API 키','데이터베이스 출입증. anon = 일반 출입증(화면에 들어가도 됨), service_role = 마스터키(절대 비밀).'],
+  ['환경변수','Netlify에 맡겨 두는 설정값. 여기 넣은 주소·키가 화면에 자동으로 들어갑니다.'],
+  ['SMTP','메일 발송 서버. Gmail을 연결해 인증코드 메일을 보냅니다.']].map(([k,v])=>({k,v}));
+const PARTS=[
+ {id:'p1',kicker:'1단계 · 약 10분',title:'GitHub — 파일 보관함 만들기',lead:'받은 aq-supabase.zip 파일을 GitHub에 올리는 단계입니다.',steps:[
+  {id:'gh1',t:'GitHub 가입',ps:['@@github.com/signup|https://github.com/signup@@ 접속','이메일 입력 → [[Continue]] → 비밀번호 → 사용자 이름(영문, 예: `hyosarang-it`) → [[Continue]]','퍼즐(로봇 확인)을 풀고 [[Create account]]','메일로 온 **8자리 코드** 입력 → 질문 화면은 [[Skip personalization]] 으로 넘어가도 됩니다'],ok:'오른쪽 위에 동그란 프로필 그림이 보입니다. 메모장 1)에 아이디를 적으세요.'},
+  {id:'gh2',t:'저장소(파일 보관함) 만들기',ps:['오른쪽 위 [[+]] → [[New repository]]','Repository name: `'+SITE+'`','**Private** 선택 (나만 보기, 무료)','나머지는 그대로 두고 맨 아래 [[Create repository]]'],ok:'"Quick setup" 화면이 나옵니다. 주소창 주소를 메모장 1)에 붙여넣으세요.'},
+  {id:'gh3',t:'받은 zip 파일 압축 풀기',ps:['채팅에서 받은 **aq-supabase.zip** 을 오른쪽 클릭 → [[압축 풀기]] (맥은 더블클릭)','풀린 **aq-supabase** 폴더를 열면 `web`, `src`, `supabase`, `sheet-sync`, `scripts` 폴더와 `netlify.toml`, `README.md` 파일이 보입니다'],warn:'zip 파일 그대로 올리면 안 됩니다. 반드시 압축을 푼 뒤 폴더 안의 내용을 올립니다.'},
+  {id:'gh4',t:'파일 올리기',ps:['2번의 "Quick setup" 화면에서 파란 글씨 **uploading an existing file** 클릭','aq-supabase 폴더 **안에 있는 것 전부**(폴더 5개 + 파일 2개)를 마우스로 선택해 브라우저 화면에 끌어다 놓기','올라가는 동안 기다린 뒤 아래 [[Commit changes]]'],ok:'저장소 첫 화면에 web, src … 폴더와 netlify.toml 이 바로 보입니다.',warn:'저장소 안에 aq-supabase 폴더 하나만 보이면 잘못 올린 것입니다. 폴더 안의 내용을 올려야 합니다. 크롬이나 엣지 브라우저를 쓰세요.'},
+  {id:'gh5',t:'연습용 브랜치 dev 만들기',ps:['저장소 화면 왼쪽 위 [[main ▾]] 버튼 클릭','입력칸에 `dev` 입력 → 아래 [[Create branch dev from main]] 클릭'],ok:'버튼이 dev ▾ 로 바뀝니다. 다시 눌러 main 으로 돌려놓으세요. 이제 main(운영)과 dev(개발) 두 벌이 있습니다.'}]},
+ {id:'p2',kicker:'2단계 · 약 15분',title:'Supabase — 공용 데이터베이스 만들기',lead:'모든 사용자가 같이 쓰는 장부를 만듭니다. 만들어 둔 SQL 파일을 붙여넣기만 하면 표와 보안 규칙이 자동으로 생깁니다.',steps:[
+  {id:'sb1',t:'Supabase 가입',ps:['@@supabase.com/dashboard|https://supabase.com/dashboard@@ 접속 → [[Continue with GitHub]] → [[Authorize supabase]]','처음이면 조직(Organization)을 만들라고 합니다. 이름 `hyosarang`, Type은 Personal 또는 Company, Plan은 **Free** → [[Create organization]]'],ok:'"Create a new project" 화면이 나옵니다.'},
+  {id:'sb2',t:'프로젝트 만들기',ps:['Project name: `'+SITE+'`','Database Password: [[Generate a password]] 누른 뒤 [[Copy]] → 메모장 2)에 붙여넣기','Region: **Northeast Asia (Seoul)**','[[Create new project]] → 1~2분 기다리기'],ok:'프로젝트 첫 화면이 보이고 왼쪽에 아이콘 메뉴가 생깁니다.'},
+  {id:'sb3',t:'표와 보안 규칙 만들기 (SQL 실행)',ps:['압축 푼 폴더의 `supabase/01_schema.sql` 파일을 오른쪽 클릭 → 연결 프로그램 → **메모장**으로 열기','메모장에서 [[Ctrl]]+[[A]] (전체 선택) → [[Ctrl]]+[[C]] (복사)','Supabase 왼쪽 메뉴 **SQL Editor** (>_ 모양 아이콘) → [[+ New query]] 또는 빈 편집 화면 클릭 → [[Ctrl]]+[[V]] (붙여넣기)','편집 화면 맨 아래로 내려가 `여기에본인이메일@gmail.com` 을 **내 이메일**로 바꾸기 (작은따옴표는 그대로)','오른쪽 아래 [[Run]] (또는 Ctrl+Enter)'],ok:'아래 결과 창에 "Success. No rows returned" 가 나옵니다.',warn:'"destructive operation" 확인 창이 뜨면 [[Run this query]] 를 누르세요. 이 이메일이 첫 관리자(개발자)가 되니 실제로 메일을 받을 수 있는 주소여야 합니다.'},
+  {id:'sb4',t:'(선택) 샘플 데이터 넣기',ps:['같은 방법으로 `supabase/02_sample_data.sql` 을 열어 전체 복사','SQL Editor 에서 [[+ New query]] → 붙여넣기 → [[Run]]'],ok:'구글시트를 연결하기 전에도 앱 화면에 숫자가 나옵니다. 나중에 구글시트 동기화가 시작되면 실제 데이터로 바뀝니다.'},
+  {id:'sb5',t:'잘 만들어졌는지 눈으로 확인',ps:['왼쪽 메뉴 **Table Editor** (표 모양 아이콘)','왼쪽 목록에 `app_logs`, `app_users`, `series`, `settings`, `upload_history` 5개가 보이는지 확인','`app_users` 클릭 → 내 이메일이 한 줄 들어 있는지 확인'],ok:'5개 표가 있고 app_users 에 내 이메일과 시스템관리자가 보입니다.'},
+  {id:'sb6',t:'주소와 열쇠(키) 메모하기',ps:['왼쪽 아래 톱니바퀴 **Project Settings**','**Data API** (또는 API) 메뉴 → **Project URL** 옆 [[Copy]] → 메모장 2)','**API Keys** 메뉴 → **Legacy API Keys** 탭 (탭이 없으면 그 화면 그대로)','`anon` `public` 키 [[Copy]] → 메모장 2)','`service_role` `secret` 키 [[Reveal]] → [[Copy]] → 메모장 2)'],ok:'메모장 2)의 Project URL, anon, service_role 세 칸이 모두 채워졌습니다.',warn:'service_role 키는 데이터베이스 마스터키입니다. GitHub·카톡·메일에 절대 붙여넣지 마세요. 6단계에서 한 번만 씁니다.'}]},
+ {id:'p3',kicker:'3단계 · 약 15분',title:'로그인 인증코드 메일 설정',lead:'Supabase가 기본으로 보내는 메일은 프로젝트 주인에게만, 시간당 몇 통만 갑니다. 병원 사용자에게 보내려면 Gmail로 보내도록 연결합니다. 이 단계 전에는 2단계에서 적은 내 이메일로만 로그인 테스트가 됩니다.',steps:[
+  {id:'ml1',t:'Gmail 2단계 인증 켜기',ps:['메일을 보낼 Gmail 계정(병원 공용 계정 권장)으로 로그인','@@Google 계정 → 2단계 인증|https://myaccount.google.com/signinoptions/twosv@@ → 안내대로 휴대폰 번호 등록 → 사용 설정'],ok:'"2단계 인증 사용 중" 이 보입니다.'},
+  {id:'ml2',t:'앱 비밀번호 만들기',ps:['@@앱 비밀번호 페이지|https://myaccount.google.com/apppasswords@@ 접속 (다시 로그인할 수 있음)','앱 이름에 `supabase` 입력 → [[만들기]]','노란 상자의 **16자리**를 공백 없이 메모장 3)에 적기 → [[완료]]'],warn:'이 16자리는 다시 볼 수 없습니다. 잃어버리면 새로 만들면 됩니다.'},
+  {id:'ml3',t:'Supabase에 Gmail 연결 (SMTP)',ps:['Supabase 왼쪽 메뉴 **Authentication** (사람 모양) → **Emails** → **SMTP Settings** 탭','[[Enable Custom SMTP]] 스위치 켜기','Sender email: 보낼 Gmail 주소 · Sender name: `적정성평가`','Host: `smtp.gmail.com` · Port: `465`','Username: 보낼 Gmail 주소 · Password: 16자리 앱 비밀번호','[[Save changes]]'],ok:'저장 완료 알림이 뜹니다.'},
+  {id:'ml4',t:'메일 내용을 6자리 코드로 바꾸기',ps:['같은 **Authentication → Emails** 의 **Templates** 탭 → **Magic Link** 선택','Subject: `[적정성평가] 로그인 인증코드`','Body(본문) 내용을 모두 지우고 아래 상자의 내용을 [[복사]] 해서 붙여넣기 → [[Save]]'],code:TPL,ok:'미리보기에 "아래 6자리 코드를…" 문구가 보입니다.'},
+  {id:'ml5',t:'첫 가입 메일도 똑같이',ps:['Templates 탭에서 **Confirm signup** 선택','Subject 와 Body 를 4번과 똑같이 바꾸고 [[Save]]'],ok:'처음 로그인하는 사용자도 6자리 코드 메일을 받습니다.'}]},
+ {id:'p4',kicker:'4단계 · 약 10분',title:'Netlify — 고정 주소 만들기',steps:[
+  {id:'nt1',t:'Netlify 가입',ps:['@@app.netlify.com/signup|https://app.netlify.com/signup@@ → [[Sign up with GitHub]] → [[Authorize Netlify]]','질문 화면은 적당히 고르거나 건너뛰기'],ok:'Netlify 첫 화면(Team overview)이 나옵니다.'},
+  {id:'nt2',t:'GitHub 저장소 연결',ps:['[[Add new site]] (또는 Add new project) → [[Import an existing project]]','[[GitHub]] → 권한 창에서 **Only select repositories** → `'+SITE+'` 선택 → [[Install]]','목록에서 `'+SITE+'` 클릭','Build command·Publish directory 칸은 자동으로 채워집니다. **그대로** 둡니다'],warn:'Build command 에 bash scripts/build.sh, Publish directory 에 site 가 보이면 맞습니다. 비어 있으면 직접 이렇게 입력하세요.'},
+  {id:'nt3',t:'열쇠 2개 맡기기 (환경변수)',ps:['같은 화면 아래 [[Add environment variables]] (없으면 배포 후 Site configuration → Environment variables → Add a variable)','Key `SUPABASE_URL` · Value: 메모장 2)의 Project URL','[[New variable]] → Key `SUPABASE_ANON_KEY` · Value: 메모장 2)의 anon 키','[[Deploy '+SITE+']]'],warn:'service_role 키는 여기에 넣지 않습니다. anon 키만 넣습니다.'},
+  {id:'nt4',t:'배포 확인',ps:['1분쯤 기다리면 Production deploys 에 초록색 **Published** 표시','위쪽의 `https://(무작위이름).netlify.app` 링크를 눌러 열기'],ok:'적정성평가 로그인 화면이 나옵니다. 샘플 사용자 목록이 보이면 3번 환경변수가 안 들어간 것이니 확인 후 Deploys → Trigger deploy → Deploy site.'},
+  {id:'nt5',t:'주소 고정하기',ps:['**Site configuration** (또는 Project configuration) → **General** → [[Change site name]]','`'+SITE+'` 입력 → [[Save]]'],ok:'주소가 https://'+SITE+'.netlify.app 로 바뀌고 앞으로 바뀌지 않습니다. 이미 쓰는 이름이면 뒤에 -2 를 붙이고 메모장 4)를 고치세요.'},
+  {id:'nt6',t:'개발 미리보기 주소 켜기',ps:['Site configuration → **Build & deploy** → **Continuous deployment** → **Branches and deploy contexts** → [[Configure]]','Branch deploys: **Let me add individual branches** → `dev` 입력 → [[Save]]','dev 첫 배포는 dev 브랜치에 무언가 저장(커밋)되면 시작됩니다'],ok:'dev 브랜치를 고치면 https://dev--'+SITE+'.netlify.app 에 올라가고, 화면 위에 "개발 미리보기" 표시가 뜹니다.'},
+  {id:'nt7',t:'Supabase에 주소 알려주기',ps:['Supabase → **Authentication** → **URL Configuration**','Site URL: `https://'+SITE+'.netlify.app` → [[Save]]','Redirect URLs → [[Add URL]] → `https://dev--'+SITE+'.netlify.app` → [[Save]]']}]},
+ {id:'p5',kicker:'5단계 · 약 5분',title:'첫 로그인과 사용자 등록',steps:[
+  {id:'lg1',t:'개발자로 첫 로그인',ps:['`https://'+SITE+'.netlify.app` 접속','2단계 SQL에 적은 이메일 입력 → [[인증코드 받기]]','메일함(없으면 스팸함)의 6자리 입력 → [[로그인]]'],ok:'왼쪽 사이드바 아래에 내 이름과 "시스템관리자" 가 보입니다.'},
+  {id:'lg2',t:'다른 사용자 등록',ps:['왼쪽 [[기준설정]] → [[사용자권한]] → [[사용자 추가]]','이메일·이름 입력 → 기관마다 **없음 / 뷰 / 관리 / admin** 선택 → [[적용]]','화면 아래 [[저장]]'],ok:'목록에 추가되고, 그 사람은 같은 주소에서 자기 이메일로 로그인할 수 있습니다.'},
+  {id:'lg3',t:'주소 공유',ps:['사용자들에게 `https://'+SITE+'.netlify.app` 를 보내기','PC: 즐겨찾기 / 휴대폰: 브라우저 메뉴 → **홈 화면에 추가**']}]},
+ {id:'p6',kicker:'6단계 · 약 15분 · 구글시트를 쓸 때만',title:'구글시트 자동 동기화 (개발자)',lead:'구글시트에 있는 재원환자·근무표를 5분마다 Supabase로 옮기는 로봇을 켭니다. 파일 업로드만 쓸 거라면 건너뛰어도 됩니다.',steps:[
+  {id:'gs1',t:'Apps Script 프로젝트 만들기',ps:['원천 구글시트를 볼 수 있는 구글 계정으로 @@Apps Script 새 프로젝트 열기|https://script.google.com/home/projects/create@@','위쪽 "제목 없는 프로젝트" 를 눌러 이름 `적정성평가 동기화`','편집창의 기존 내용을 모두 지우고, 메모장으로 연 `sheet-sync/SheetSync.gs` 내용을 붙여넣기','왼쪽 **파일** 옆 [[+]] → 스크립트 → 이름 `AQ` → `sheet-sync/AQ.gs` 내용 붙여넣기','[[Ctrl]]+[[S]] 저장']},
+  {id:'gs2',t:'비밀 값 2개 넣기',ps:['왼쪽 톱니바퀴 **프로젝트 설정** → 맨 아래 **스크립트 속성** → [[스크립트 속성 추가]]','속성 `SUPABASE_URL` · 값: Project URL','[[스크립트 속성 추가]] → 속성 `SUPABASE_SERVICE_KEY` · 값: **service_role** 키','[[스크립트 속성 저장]]'],warn:'여기가 service_role 키를 넣는 유일한 곳입니다.'},
+  {id:'gs3',t:'앱에서 시트 위치 지정',ps:['앱 → [[기준설정]] → [[시트연동]]','기관마다 재원환자·근무표 DB 각각: [[URL 입력]] → 구글시트 주소창 주소 붙여넣기 → [[적용]]','탭 이름: 구글시트 아래쪽 탭 이름을 그대로 입력 · 열 위치 확인','화면 아래 [[저장]]']},
+  {id:'gs4',t:'첫 동기화 실행',ps:['Apps Script 위쪽 함수 선택 상자에서 `syncNow` → [[실행]]','"승인 필요" → [[권한 검토]] → 계정 선택 → "확인되지 않은 앱" 이 나오면 [[고급]] → [[적정성평가 동기화(으)로 이동]] → [[허용]]','아래 실행 로그 확인'],ok:'로그에 기관마다 ✓ 표시가 나옵니다. ✗ 가 있으면 뒤의 설명(탭 이름·URL)을 고치고 다시 실행하세요.'},
+  {id:'gs5',t:'5분마다 자동 실행 켜기',ps:['함수 선택 상자에서 `installTrigger` → [[실행]]','왼쪽 시계 아이콘(트리거)에 syncNow · 5분마다 가 보이는지 확인'],ok:'이제 구글시트를 고치면 5분 안에 모든 사용자 화면에 반영됩니다. 앱 시트연동의 [연결 테스트]로 최근 동기화 결과를 볼 수 있습니다.'}]},
+ {id:'p7',kicker:'이후',title:'화면을 고치고 업데이트하는 법',lead:'수정본은 먼저 dev(개발)에 올려 확인하고, 괜찮으면 main(운영)으로 옮깁니다.',steps:[
+  {id:'up1',t:'dev 브랜치에 파일 올리기',ps:['GitHub 저장소 → 왼쪽 위 [[main ▾]] → **dev** 선택','고칠 파일이 `web/index.html` 이면: web 폴더 클릭 → [[Add file]] → [[Upload files]] → 새 index.html 끌어다 놓기 → [[Commit changes]]','글자 몇 개만 고칠 때는 파일 클릭 → 연필 아이콘 → 수정 → [[Commit changes]]'],ok:'1분 뒤 dev 미리보기 주소에 반영되고, 동료도 같은 주소로 확인할 수 있습니다.',warn:'개발 미리보기도 운영과 같은 데이터를 씁니다. 미리보기에서 저장·업로드하면 실제로 반영됩니다.'},
+  {id:'up2',t:'운영에 반영 (dev → main)',ps:['저장소 위쪽 [[Pull requests]] → [[New pull request]]','base: **main** ← compare: **dev** 로 고르기 → [[Create pull request]] → 제목 입력 → [[Create pull request]]','[[Merge pull request]] → [[Confirm merge]]'],ok:'1분 뒤 운영 주소가 새 화면으로 바뀌고, 접속 중인 사용자 화면에 "새 버전이 배포되었습니다" 안내가 뜹니다.'}]}];
+const FAQ=[
+  ['로그인 화면에 샘플 사용자 목록이 보여요','Netlify 환경변수가 안 들어간 데모 모드입니다. 4단계 3번의 이름 철자(SUPABASE_URL, SUPABASE_ANON_KEY)를 확인하고 Deploys → Trigger deploy.'],
+  ['인증코드 메일이 안 와요','스팸함 확인 → 3단계 SMTP 값(포트 465, 16자리 앱 비밀번호) 확인 → Supabase 왼쪽 Logs → Auth 에서 오류 문구 확인.'],
+  ['메일에 코드 없이 링크만 있어요','3단계 4·5번 템플릿을 저장했는지 확인하세요. 본문에 {{ .Token }} 이 들어가야 합니다.'],
+  ['"현재 계정은 등록되어 있지 않습니다"','관리자가 사용자권한에 그 이메일을 등록하고 저장했는지, 사용여부가 사용인지 확인하세요.'],
+  ['SQL Run 에서 빨간 오류가 나요','오류 첫 줄을 캡처해 채팅에 올려 주세요. "already exists" 는 이미 만들어졌다는 뜻이라 괜찮습니다.'],
+  ['숫자가 비어 있어요','샘플 데이터(2단계 4번)를 넣었는지, 또는 6단계 동기화 로그에 ✓ 가 나오는지 확인하세요.'],
+  ['한동안 안 썼더니 접속이 안 돼요','Supabase 무료 프로젝트는 7일 동안 사용이 없으면 일시정지됩니다. Supabase 대시보드에서 Restore project. 6단계 자동 동기화를 켜 두면 멈추지 않습니다.']].map(([q,a])=>({q,a}));
+function segs(str){ const out=[],re=/\*\*(.+?)\*\*|`(.+?)`|\[\[(.+?)\]\]|@@(.+?)\|(.+?)@@/g; let i=0,m;
+  while((m=re.exec(str))){ if(m.index>i) out.push({isT:true,v:str.slice(i,m.index)});
+    if(m[1]) out.push({isB:true,v:m[1]}); else if(m[2]) out.push({isC:true,v:m[2]}); else if(m[3]) out.push({isK:true,v:m[3]}); else out.push({isA:true,v:m[4],href:m[5]});
+    i=re.lastIndex; }
+  if(i<str.length) out.push({isT:true,v:str.slice(i)}); return out; }
+const PARSED=PARTS.map(p=>({...p,steps:p.steps.map(s=>({...s,ps:s.ps.map(x=>({segs:segs(x)}))}))}));
+const ALL=PARTS.flatMap(p=>p.steps.map(s=>s.id));
+class Component extends DCLogic {
+  state={done:{},open:{},toast:'',copied:''};
+  componentDidMount(){ try{ this.setState({done:JSON.parse(localStorage.getItem('aq-guide2')||'{}')}); }catch(e){} }
+  toggle(id){ this.setState(s=>{ const d={...s.done,[id]:!s.done[id]}; localStorage.setItem('aq-guide2',JSON.stringify(d)); return {done:d,open:{...s.open,[id]:false}}; }); }
+  copy(key,text){ const ok=()=>{ this.setState({copied:key,toast:'복사했습니다'}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({copied:'',toast:''}),1600); };
+    if(navigator.clipboard) navigator.clipboard.writeText(text).then(ok,ok); else ok(); }
+  renderVals(){
+    const {done,open,copied}=this.state;
+    const parts=PARSED.map((p,pi)=>{
+      const n=p.steps.filter(s=>done[s.id]).length;
+      return {id:p.id,kicker:p.kicker,title:p.title,lead:p.lead||'',hasLead:!!p.lead,prog:n+' / '+p.steps.length+' 완료',
+        steps:p.steps.map((s,si)=>{ const d=!!done[s.id],o=!!open[s.id];
+          return {no:(pi<6?(pi+1)+'-'+(si+1):'+'+(si+1)),t:s.t,ps:s.ps,done:d,show:!d||o,openLabel:o?'접기':'다시 보기',open:()=>this.setState(st=>({open:{...st.open,[s.id]:!st.open[s.id]}})),
+            toggle:()=>this.toggle(s.id),mark:d?'✓':'',ckBg:d?'var(--good)':'var(--aq-card)',ckBd:d?'var(--good)':'color-mix(in srgb, var(--color-text) 30%, transparent)',bd:d?'color-mix(in srgb, var(--good) 40%, transparent)':'var(--aq-line)',
+            hasCode:!!s.code,code:s.code||'',copy:()=>this.copy(s.id,s.code||''),copyLabel:copied===s.id?'복사됨':'복사',
+            hasOk:!!s.ok,ok:s.ok||'',hasWarn:!!s.warn,warn:s.warn||''}; })};
+    });
+    const toc=[{label:'큰 그림',href:'#intro',dot:'var(--color-accent)',bg:'var(--aq-card)'},{label:'단어',href:'#words',dot:'var(--color-accent)',bg:'var(--aq-card)'},{label:'메모장',href:'#memo',dot:'var(--color-accent)',bg:'var(--aq-card)'}]
+      .concat(PARTS.map((p,i)=>{ const all=p.steps.every(s=>done[s.id]); return {label:(i<6?(i+1)+'. ':'')+p.title.split(' — ')[0].replace(/ \(.*\)/,''),href:'#'+p.id,dot:all?'var(--good)':'color-mix(in srgb, var(--color-text) 25%, transparent)',bg:all?'color-mix(in srgb, var(--good) 8%, var(--aq-card))':'var(--aq-card)'}; }))
+      .concat([{label:'막혔을 때',href:'#faq',dot:'var(--bad)',bg:'var(--aq-card)'}]);
+    const n=ALL.filter(id=>done[id]).length;
+    return {parts,toc,services:SERVICES,words:WORDS,faq:FAQ,memo:MEMO,copyMemo:()=>this.copy('memo',MEMO),memoLabel:copied==='memo'?'복사됨':'복사',
+      doneTxt:n+' / '+ALL.length,pct:(n/ALL.length*100).toFixed(0)+'%',toast:this.state.toast,hasToast:!!this.state.toast};
+  }
+}
+</script>
+</body>
+</html>
