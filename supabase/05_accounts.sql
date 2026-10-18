@@ -7,13 +7,13 @@ create or replace function aq.aq_login_email(p_kind text, p_id text) returns tex
   where upper(active) <> 'N' and case p_kind
     when 'sys'   then role = '시스템관리자' and lower(emp_no) = lower(trim(p_id))
     when 'gmail' then lower(profile ->> 'gmail') = lower(trim(p_id)) or email = lower(trim(p_id))
-    else role <> '시스템관리자' and upper(emp_no) = upper(trim(p_id)) end
+    else upper(emp_no) = upper(trim(p_id)) end
   limit 1 $$;
 grant execute on function aq.aq_login_email(text, text) to anon, authenticated;
 
 -- 기관 admin도 자기 기관 사용자 삭제 가능
 drop policy if exists u_del on aq.app_users;
-create policy u_del on aq.app_users for delete to authenticated using (aq_is_sys() or (role <> '시스템관리자' and aq_any_level('admin')));
+create policy u_del on aq.app_users for delete to authenticated using (aq.aq_is_sys() or (role <> '시스템관리자' and aq.aq_any_level('admin')));
 
 -- ★ 시스템관리자 로그인 ID·비밀번호 지정 (아래 두 값만 바꾸고 실행)
 do $$
