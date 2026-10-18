@@ -1487,13 +1487,17 @@ class Component extends DCLogic {
           return {ok:true,msg:'등록된 사용자라면 인증코드가 발송됩니다 (메일함·스팸함 확인)'}; }
         case 'empEmail':{ const {data,error}=await sb.rpc('aq_email_for_emp',{p_emp:String(a[0]||'')}); if(error) return fail('사번 확인 실패: '+error.message); return {ok:true,email:data||''}; }
         case 'google':{ const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}}); if(error) return fail('Google 로그인 실패: '+error.message); return {ok:true,redirect:true}; }
-        case 'pwLogin':{ const kind=a[2]||'emp', byMail=kind==='gmail', bad='ID 또는 비밀번호가 올바르지 않거나 접근이 차단된 계정입니다.';
-          const {data:em,error:e1}=await sb.rpc('aq_login_email',{p_kind:kind,p_id:String(a[0]||'')}); if(e1) return fail('로그인 확인 실패: '+e1.message); if(!em) return fail(bad);
+        case 'loginCheck':{ const {data,error}=await sb.rpc('aq_login_check',{p_email:String(a[0]||'')}); if(error) return {ok:false}; return {ok:true,hasAuth:!!data}; }
+        case 'pwLogin':{ const kind=a[2]||'emp', byMail=kind==='gmail', NM={emp:'사번',gmail:'Gmail',sys:'시스템 관리자 ID'}[kind];
+          const {data:em,error:e1}=await sb.rpc('aq_login_email',{p_kind:kind,p_id:String(a[0]||'')}); if(e1) return fail('로그인 확인 실패: '+e1.message);
+          if(!em) return fail('등록되지 않았거나 사용 중지된 '+NM+'입니다. '+(kind==='emp'?'시스템 관리자 계정이면 [시스템 관리자] 탭을 이용하세요.':'관리자에게 등록을 요청하세요.'));
+          const bad='비밀번호가 올바르지 않습니다. 처음이면 1234, 잊었으면 관리자에게 초기화를 요청하세요.';
           const email=String(em).toLowerCase(), {error}=await sb.auth.signInWithPassword({email,password:PWX(a[1]||'')});
-          if(error) return fail(/confirm/i.test(error.message)?'이메일 인증이 필요합니다. "처음 로그인 · 비밀번호 찾기"를 이용하세요.':bad);
+          if(error) return fail(/confirm/i.test(error.message)?'이메일 인증이 필요합니다. "처음 로그인 · 비밀번호 찾기"를 이용하세요.':/database|schema|querying/i.test(error.message)?'로그인 서버 오류: '+error.message:bad);
           this.session=email; await this.sbLoad(true);
           const u=AQX.findUser(this.DATA,email);
-          if(!u){ await sb.auth.signOut(); this.session=null; this.DATA=null; return fail('현재 계정은 등록되어 있지 않습니다. 관리자에게 요청하세요'); }
+          if(!u){ const raw=(this.DATA.users||[]).find(x=>String(x.email).toLowerCase()===email); await sb.auth.signOut(); this.session=null; this.DATA=null;
+            return fail(!raw?'계정 정보를 읽지 못했습니다. 관리자에게 문의하세요.':String(raw.active).toUpperCase()==='N'?'정지된 계정입니다.':!AQX.isValidNow(raw)?'유효기간이 지났거나 아직 시작 전인 계정입니다.':'소속기관 권한이 없습니다. 관리자가 소속기관과 현황뷰어 [뷰]를 지정해야 합니다.'); }
           sb.rpc('aq_touch').then(()=>{},()=>{}); this._pend.logs.push({email,name:u.name,act:'로그인',detail:{emp:'사번',gmail:'Gmail',sys:'시스템관리자'}[kind]+'+비밀번호'}); await this.sbFlush();
           const ur=this.DATA.users.find(x=>String(x.email).toLowerCase()===email); return {ok:true,token:email,mustChange:!!(ur&&ur.pwReset)}; }
         case 'adminSetPassword':{ const {error}=await sb.rpc('aq_admin_set_password',{p_email:String(a[0]).toLowerCase(),p_pw:PWX(a[1])}); if(error) return fail('비밀번호 지정 실패: '+error.message);
@@ -1818,9 +1822,10 @@ class Component extends DCLogic {
     this.uHistPush(row,'신규 등록 ('+({sys:'시스템 관리자',org:'기관 관리자',user:'사용자'}[n.role])+')');
     this.setState(st=>({adm:{...st.adm,USERS:st.adm.USERS.concat([row])},uNew:null}),async()=>{
       this.uSave(); await wait(400); while(this.state.uSaving) await wait(150);
-      const r=await this.call('adminSetPassword',row[0],'1234');
-      if(r.ok) this.toast(name+' 등록됨 · 초기 비밀번호 1234 (첫 로그인 때 변경)');
-      else this.toast(name+' 등록됨 · 초기 비밀번호 설정 실패: '+(r.msg||r.message)+' — [편집]에서 비밀번호를 지정하세요',true);
+      if(this.state.saveInfo&&this.state.saveInfo.state==='error') return this.toast(name+' 등록 실패: '+this.state.saveInfo.msg,true);
+      if(!this.live){ await this.call('adminSetPassword',row[0],'1234'); }
+      else { const ck=await this.call('loginCheck',row[0]); if(ck.ok&&!ck.hasAuth) return this.toast(name+' 등록됨 · 로그인 계정이 만들어지지 않았습니다. Supabase에서 12_auto_login_account.sql을 실행하세요.',true); }
+      this.toast(name+' 등록됨 · 사번 '+emp+' / 초기 비밀번호 1234 로 바로 로그인할 수 있습니다 (첫 로그인 때 변경)');
     });
   }
   uRowObj(r){ const o={}; AQX.UHEAD.forEach((k,i)=>o[k]=r[i]); return o; }

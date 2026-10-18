@@ -43,7 +43,7 @@ function loginEmail(d, kind, id) {
     if (!isActive(x)) return false;
     if (kind === 'sys') return x.role === '시스템관리자' && low(x.empNo) === id;
     if (kind === 'gmail') return low(x.gmail) === id || low(x.email) === id;
-    return x.role !== '시스템관리자' && low(x.empNo) === id;
+    return low(x.empNo) === id;
   })[0];
   return u ? u.email : '';
 }
