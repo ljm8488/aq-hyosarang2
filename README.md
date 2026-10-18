@@ -1,3 +1,10 @@
+## ★ 업데이트 방법 (파일 1개)
+1. 새 `index.html` 하나만 받습니다.
+2. GitHub 저장소 **맨 위 화면**(폴더 안 아님)에서 Add file → Upload files → `index.html` 끌어다 놓기 → Commit changes
+3. 1~2분 뒤 사이트에 자동 반영됩니다. (같은 이름 파일은 자동으로 교체됩니다)
+
+DB 구조가 바뀔 때만 `supabase/`의 새 SQL을 Supabase SQL Editor에서 실행합니다.
+
 # 적정성평가 구조영역 계산 시스템 (Supabase + Netlify)
 
 > 처음 설정하는 분은 **배포 후 `/guide.html`** (또는 이 저장소의 `web/guide.html`)의 체크리스트를 따라가세요. 아래는 같은 내용의 요약입니다.

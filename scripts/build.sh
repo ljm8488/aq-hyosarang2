@@ -4,6 +4,8 @@ set -euo pipefail
 rm -rf site && mkdir -p site
 cp -r web/. site/
 cp src/calc-engine.js src/access-engine.js site/
+# ★ 저장소 맨 위(루트)에 index.html이 있으면 그것을 사용 (단일 파일 업데이트 방식)
+if [ -f index.html ]; then cp index.html site/index.html; echo "✓ 루트 index.html 사용"; fi
 
 ENVN="prod"
 if [ "${CONTEXT:-production}" != "production" ]; then ENVN="dev"; fi
